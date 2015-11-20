@@ -3,8 +3,23 @@ var userdb = require('./lib/userdb');
 var roomdb = require('./lib/roomdb');
 var Talk = require('./lib/talk');
 
+function init() {
+    console.log('init');
+    var room = new roomdb.createRoom(['vingorius', 'fish']);
+    roomdb.addRoom(room);
+
+    var usr1 = new userdb.createUser('vingorius', ['fish', 'ms', 'mk', 'mh'], [room]);
+    var usr2 = new userdb.createUser('fish', ['vingorius', 'ms', 'mk', 'mh'], [room]);
+    var usr3 = new userdb.createUser('ms', ['vingorius', 'fish', 'mk', 'mh']);
+    userdb.addUser(usr1);
+    userdb.addUser(usr2);
+    userdb.addUser(usr3);
+}
+
 exports.createServer = function(http) {
     var io = new Server(http);
+    init();
+
 
     // io.use(function(socket, next) {
     //     console.log('io.use');
@@ -12,21 +27,21 @@ exports.createServer = function(http) {
     // });
 
     io.on('connection', function(socket) {
-        // console.log('a user connected');
         socket.auth = false;
         socket.user = null;
-        // socket.room = null;
 
         socket.on('auth', function(p_user) {
-            var user = userdb.auth(p_user, socket.id);
-            console.log('auth', user);
-            if (user) {
-                socket.auth = true;
-                socket.user = user;
-                socket.emit('auth', user);
-            } else {
-                socket.emit('err', 'auth err');
-            }
+            console.log('auth', p_user);
+            userdb.auth(p_user, function(user) {
+                if (user) {
+                    user.sid = socket.id;
+                    socket.auth = true;
+                    socket.user = user;
+                    socket.emit('auth', user);
+                } else {
+                    socket.emit('err', 'auth err');
+                }
+            });
         });
 
         /*
@@ -46,30 +61,28 @@ exports.createServer = function(http) {
         });
         */
 
-        socket.on('room', function(friend, cb) {
-            if (!socket.auth) return socket.emit('err', 'not auth');
-
-            var users = [socket.user.name, friend];
-            var room = roomdb.findRoom(users) || roomdb.addRoom(users);
-            socket.join(room.name);
-
-            //if friend login, send 'room' messages
-            var friend_sid = userdb.getSid(friend);
-            if (friend_sid) {
-                var friend_socket = io.sockets.connected[friend_sid];
-                friend_socket.join(room.name);
-
-                socket.broadcast.to(friend_sid).emit('room', room);
-            }
-            cb(null, room);
-        });
+        // socket.on('room', function(friend, cb) {
+        //     if (!socket.auth) return socket.emit('err', 'not auth');
+        //
+        //     var users = [socket.user.name, friend];
+        //     var room = roomdb.findRoom(users) || roomdb.addRoom(users);
+        //     socket.join(room.name);
+        //
+        //     //if friend login, send 'room' messages
+        //     var friend_sid = userdb.getSid(friend);
+        //     if (friend_sid) {
+        //         var friend_socket = io.sockets.connected[friend_sid];
+        //         friend_socket.join(room.name);
+        //
+        //         socket.broadcast.to(friend_sid).emit('room', room);
+        //     }
+        //     cb(null, room);
+        // });
 
         socket.on('talk', function(talk) {
             if (!socket.auth) return socket.emit('err', 'not auth');
 
-            console.log('talk', talk);
             var room = roomdb.findRoomByName(talk.room_name);
-            console.log('room', room);
             room.talks.push(talk);
             socket.broadcast.to(talk.room_name).emit('talk', talk);
         });

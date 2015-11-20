@@ -53,6 +53,7 @@ $(document).ready(function() {
 
     $('#authbtn').click(function() {
         $('#friends').empty();
+        $('#rooms').empty();
 
         user.name = $('#id').val();
         socket.emit('auth', user);
