@@ -100,8 +100,8 @@ exports.createServer = function(http) {
 
         socket.on('disconnect', function() {
             if (socket.user) {
-                user.setSocketId(null);
-                user.leaveAll(socket);
+                socket.user.setSocketId(null);
+                socket.user.leaveAll(socket);
                 console.log(socket.user, ' disconnected');
             } else {
                 console.log('user disconnected');
