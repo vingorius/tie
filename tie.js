@@ -1,28 +1,32 @@
 var Server = require('socket.io');
 var userdb = require('./lib/userdb');
+var User = require('./lib/user');
 var roomdb = require('./lib/roomdb');
+var Room = require('./lib/room');
 var Talk = require('./lib/talk');
 
 function init() {
     console.log('init');
-    var room = new roomdb.createRoom(['vingorius', 'fish']);
-    roomdb.addRoom(room);
+    var room1 = roomdb.createRoom(['vingorius', 'fish']);
+    var room2 = roomdb.createRoom(['vingorius', 'ms']);
 
-    var usr1 = new userdb.createUser('vingorius', ['fish', 'ms', 'mk', 'mh'], [room]);
-    var usr2 = new userdb.createUser('fish', ['vingorius', 'ms', 'mk', 'mh'], [room]);
-    var usr3 = new userdb.createUser('ms', ['vingorius', 'fish', 'mk', 'mh']);
-    userdb.addUser(usr1);
-    userdb.addUser(usr2);
-    userdb.addUser(usr3);
+    var usr1 = userdb.createUser('vingorius', ['fish', 'ms', 'mk', 'mh'], [room1, room2]);
+    var usr2 = userdb.createUser('fish', ['vingorius', 'ms', 'mk', 'mh'], [room1]);
+    var usr3 = userdb.createUser('ms', ['vingorius', 'fish', 'mk', 'mh']);
+    var usr4 = userdb.createUser('mk', ['vingorius']);
+}
+
+function sendErr(socket, msg) {
+    //TODO err 보내는 것. 나한테만 보내야한다.
+    socket.to(socket.id).emit('err', msg);
 }
 
 exports.createServer = function(http) {
     var io = new Server(http);
     init();
 
-
     // io.use(function(socket, next) {
-    //     console.log('io.use');
+    //     console.log('io.use',socket);
     //     next();
     // });
 
@@ -34,62 +38,70 @@ exports.createServer = function(http) {
             console.log('auth', p_user);
             userdb.auth(p_user, function(user) {
                 if (user) {
-                    user.sid = socket.id;
+                    user.setSocketId(socket.id);
+                    user.joinAll(socket);
                     socket.auth = true;
                     socket.user = user;
                     socket.emit('auth', user);
                 } else {
-                    socket.emit('err', 'auth err');
+                    sendErr(socket, 'auth err');
                 }
             });
         });
 
-        /*
-        socket.on('list', function() {
-            if (!socket.auth) return socket.emit('err', 'not auth');
+        socket.on('room', function(friend_name, cb) {
+            if (!socket.auth) return sendErr(socket, 'not auth');
 
-            var friends = userdb.list(socket.user);
-            friends.forEach(function(friend) {
-                var room = roomdb.findRoom([socket.user.name, friend]);
-                if (room){
-                    console.log('list', room.name,' join');
-                    socket.join(room.name);
+            var room = roomdb.createRoom([socket.user.name, friend_name],new Talk(socket.user.name, 'new room'));
+            socket.user.addRoom(room);
+
+            socket.join(room.name);
+
+            var friend = userdb.findUser(friend_name);
+            console.log('room,friend', friend);
+            if (friend) {
+                friend.addRoom(room);
+                if (friend.isLogin()) {
+                    socket.broadcast.to(friend.getSocketId()).emit('room', room);
                 }
-            });
-
-            socket.emit('list', userdb.list(socket.user));
+                cb(room);
+            } else {
+                sendErr(socket, 'no friend');
+            }
         });
-        */
 
-        // socket.on('room', function(friend, cb) {
-        //     if (!socket.auth) return socket.emit('err', 'not auth');
-        //
-        //     var users = [socket.user.name, friend];
-        //     var room = roomdb.findRoom(users) || roomdb.addRoom(users);
-        //     socket.join(room.name);
-        //
-        //     //if friend login, send 'room' messages
-        //     var friend_sid = userdb.getSid(friend);
-        //     if (friend_sid) {
-        //         var friend_socket = io.sockets.connected[friend_sid];
-        //         friend_socket.join(room.name);
-        //
-        //         socket.broadcast.to(friend_sid).emit('room', room);
-        //     }
-        //     cb(null, room);
-        // });
+        /**
+         * room 콜을 받은 client가 join하기 위해 날린다.
+         */
+        socket.on('join', function(room_name) {
+            if (!socket.auth) return sendErr(socket, 'not auth');
 
-        socket.on('talk', function(talk) {
-            if (!socket.auth) return socket.emit('err', 'not auth');
+            console.log('join', room_name, socket.user.name);
 
-            var room = roomdb.findRoomByName(talk.room_name);
-            room.talks.push(talk);
-            socket.broadcast.to(talk.room_name).emit('talk', talk);
+            var room = roomdb.findRoom(room_name);
+            if (room) {
+                socket.join(room.name);
+            } else {
+                sendErr(socket, 'no room for ' + room_name);
+            }
+        });
+
+        socket.on('talk', function(room_name, talk) {
+            if (!socket.auth) return sendErr(socket, 'not auth');
+
+            var room = roomdb.findRoom(room_name);
+            talk.from = socket.user.name;
+
+            console.log('talk', room_name, talk);
+            room.addTalk(talk);
+
+            socket.broadcast.to(room_name).emit('talk',room_name, talk);
         });
 
         socket.on('disconnect', function() {
             if (socket.user) {
-                socket.user.sid = null;
+                user.setSocketId(null);
+                user.leaveAll(socket);
                 console.log(socket.user, ' disconnected');
             } else {
                 console.log('user disconnected');

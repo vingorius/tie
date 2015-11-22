@@ -2,8 +2,6 @@ $(document).ready(function() {
 
     var socket = io();
     var user = {};
-    var friend;
-    var rooms = [];
     var cur_room_name;
 
     function findRoom(room_name) {
@@ -14,6 +12,10 @@ $(document).ready(function() {
         }
     }
 
+    function renderRoom(room) {
+        $('#rooms').append('<li id="' + room.name + '" class="list-group-item">' + room.name + ' <span class="badge">' + room.talks.length + '</span></li>');
+    }
+
     socket.on('auth', function(user) {
         console.log('auth', user);
         // socket.emit('list');
@@ -22,7 +24,8 @@ $(document).ready(function() {
         });
         user.rooms.forEach(function(room) {
             console.log(room);
-            $('#rooms').append('<li class="list-group-item">' + room.name + '</li>');
+            renderRoom(room);
+            // $('#rooms').append('<li id="' + room.name + '" class="list-group-item">' + room.name + ' <span class="badge">'+room.talks.length+'</span></li>');
         });
     });
 
@@ -35,16 +38,17 @@ $(document).ready(function() {
 
     socket.on('room', function(room) {
         console.log('room', room);
-        rooms.push(room);
-        $('#rooms').append('<li class="list-group-item">' + room.name + '</li>');
+        socket.emit('join', room.name);
+        renderRoom(room);
+        // $('#rooms').append('<li class="list-group-item">' + room.name + '</li>');
     });
 
-    socket.on('talk', function(talk) {
-        console.log('talk', talk);
-        console.dir(socket);
+    socket.on('talk', function(room_name, talk) {
+        console.log('talk', room_name, talk);
         $('#messages').append($('<li class="text-left">').text(talk.msg));
-        //TODO
-        $('#room_vingoriusfish > span').text('2');
+        //TODO 리스너로 등록
+        var room_badge = $('#' + room_name + ' > span');
+        room_badge.text(Number(room_badge.text()) + 1);
     });
 
     socket.on('err', function(err) {
@@ -60,29 +64,26 @@ $(document).ready(function() {
     });
 
     $('#friends').on('click', 'li', function() {
-        friend = $(this).text();
+        var friend = $(this).text();
         $('#friend').addClass('label-primary').text(friend);
-        socket.emit('room', friend, function(err, room) {
-            rooms.push(room);
-            $('#rooms').append('<li id="' + room.name + '" class="list-group-item">' + room.name + ' <span class="badge">0</span></li>');
-            // $('#room').addClass('label-primary').text(room.name);
+        socket.emit('room', friend, function(room) {
+            renderRoom(room);
         });
     });
 
     $('#rooms').on('click', 'li', function() {
-        var room_name = $(this).text();
-        // console.log(room_name);
+        var room_name = $(this)[0].id;
         cur_room_name = room_name;
         $('#roomModal').modal('show');
     });
 
     $('#msgbtn').click(function() {
+        var msg = $('#m').val();
         var talk = {
-            room_name: cur_room_name,
-            from: friend,
-            msg: $('#m').val()
+            msg: msg
         };
-        $('#messages').append($('<li class="text-right">').text($('#m').val()));
-        socket.emit('talk', talk);
+        $('#messages').append($('<li class="text-right">').text(msg));
+        socket.emit('talk', cur_room_name, talk);
+        $('#m').val('');
     });
 });
