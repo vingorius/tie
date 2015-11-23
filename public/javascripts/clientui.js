@@ -17,12 +17,23 @@ $(document).ready(function() {
         $('#rooms').append('<li id="' + room.name + '" class="list-group-item">' + room.name + ' <span class="badge">' + room.talks.length + '</span></li>');
     }
 
-    function renderMyMessage(talk) {
-        $('#messages').append($('<li class="text-right">').text(talk.msg));
+    function renderMessage(talk) {
+        console.log('renderMessage', talk, user.name);
+        if (talk.from === user.name) {
+            $('#messages').append($('<li class="text-right">').text(talk.msg));
+        } else {
+            $('#messages').append($('<li class="text-left">').text(talk.msg));
+        }
     }
 
-    function renderPeerMessage(talk) {
-        $('#messages').append($('<li class="text-left">').text(talk.msg));
+    function setMessageBedge(room_name, no) {
+        var room_badge = $('#' + room_name + ' > span');
+        room_badge.text(no);
+    }
+
+    function addMessageBedge(room_name) {
+        var room_badge = $('#' + room_name + ' > span');
+        room_badge.text(Number(room_badge.text()) + 1);
     }
 
     socket.on('auth', function(p_user) {
@@ -33,7 +44,7 @@ $(document).ready(function() {
         });
         user.rooms.forEach(function(room) {
             renderRoom(room);
-            // $('#rooms').append('<li id="' + room.name + '" class="list-group-item">' + room.name + ' <span class="badge">'+room.talks.length+'</span></li>');
+            setMessageBedge(room.name, room.talks.length);
         });
     });
 
@@ -48,11 +59,10 @@ $(document).ready(function() {
         console.log('talk', room_name, talk);
         var room = findRoom(room_name);
         room.talks.push(talk);
+
         if ($('#roomModal').hasClass('in'))
-            renderPeerMessage(talk);
-        //TODO 리스너로 등록
-        var room_badge = $('#' + room_name + ' > span');
-        room_badge.text(Number(room_badge.text()) + 1);
+            renderMessage(talk);
+        addMessageBedge(room.name);
     });
 
     socket.on('err', function(err) {
@@ -80,34 +90,35 @@ $(document).ready(function() {
         cur_room_name = room_name;
         $('#roomModal').modal('show');
 
-        var room = findRoom(room_name);
+    });
+
+    $('#roomModal').on('show.bs.modal', function(event) {
+        var room = findRoom(cur_room_name);
         room.talks.forEach(function(talk) {
-            console.log(talk);
-            if(talk.from === user.name){
-                renderMyMessage(talk);
-            }else{
-                renderPeerMessage(talk);
-            }
+            renderMessage(talk);
         });
+    });
+
+    //TODO 동적으로 만들어 empty하고 다시 그리지 말고, 그리지 못한 것만 그리도록 한다.
+    $('#roomModal').on('hide.bs.modal', function(event) {
+        $('#messages').empty();
     });
 
     $('#msgbtn').click(function() {
         var msg = $('#m').val();
-        if(!msg) return;
-        
+        if (!msg) return;
+
         var talk = {
+            from: user.name,
             msg: msg
         };
 
         var room = findRoom(cur_room_name);
         room.talks.push(talk);
 
-        renderMyMessage(talk);
-        socket.emit('talk', cur_room_name, talk);
+        renderMessage(talk);
+        addMessageBedge(room.name);
+        socket.emit('talk', room.name, talk);
         $('#m').val('');
-    });
-
-    $('#closebtn').click(function() {
-        $('#messages').empty();
     });
 });

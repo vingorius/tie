@@ -7,6 +7,7 @@ var Talk = require('./lib/talk');
 
 function init() {
     console.log('init');
+    
     var room1 = roomdb.createRoom(['vingorius', 'fish']);
     var room2 = roomdb.createRoom(['vingorius', 'ms']);
 
@@ -90,7 +91,6 @@ exports.createServer = function(http) {
             if (!socket.auth) return sendErr(socket, 'not auth');
 
             var room = roomdb.findRoom(room_name);
-            talk.from = socket.user.name;
 
             console.log('talk', room_name, talk);
             room.addTalk(talk);
