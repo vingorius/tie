@@ -10,7 +10,8 @@ html
 		div.container
 			div
 				input#id(type='text') 
-				button#authbtn.btn.btn-default(type='submit') Auth
+				button#authbtn.btn.btn-default Auth
+				button#exitbtn.btn.btn-default Exit
 				div
 					span#friend.label.label-default To
 			div
@@ -29,14 +30,15 @@ html
 								span(aria-hidden='true') ×
 							h4#myModalLabel.modal-title Modal title
 						div.modal-body
-							div
+							div#msgdiv
 								ul#messages
+							div#inputdiv
 								input#m(autocomplete='off')
 								button#msgbtn Send					
 						//- div.modal-footer
 						//- 	button#closebtn.btn.btn-default(type='button', data-dismiss='modal') Close
 
-		script(src='https://cdn.socket.io/socket.io-1.2.0.js')
+		script(src='/socket.io/socket.io.js')
 		script(src='/bower_components/jquery/dist/jquery.min.js')
 		script(src='/bower_components/bootstrap/dist/js/bootstrap.min.js')
 		script(src='/javascripts/clientui.js')
