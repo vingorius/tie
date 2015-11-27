@@ -9,11 +9,15 @@ html
 	body
 		div.container
 			div
-				input#id(type='text') 
+				span#timer.label.label-primary Timer
+			div
+				input#id.input(type='text') 
 				button#authbtn.btn.btn-default Auth
 				button#exitbtn.btn.btn-default Exit
 				div
-					span#friend.label.label-default To
+					input#friend.input(type='text') 
+					button#addfriendbtn.btn.btn-default Add
+					button#infobtn.btn.btn-default Info
 			div
 				ul#friends.list-group
 					//- li.list-group-item Cras justo odio

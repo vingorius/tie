@@ -1,11 +1,8 @@
-#id {
+.input {
     width: 100px;
     margin: 5px;
 }
-#authbtn {
-    margin: 5px;
-}
-#exitbtn {
+.btn {
     margin: 5px;
 }
 #friends {

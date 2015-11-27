@@ -1,8 +1,15 @@
 $(document).ready(function() {
     var host = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
     host += '/tie';
+    var option = {
+        reconnection: true,
+        reconnectionDelay: 1000,
+        reconnectionDelayMax: 5000,
+        timeout: 20000,
+    };
+
     console.log('client nsp:%s', host);
-    var socket = io(host);
+    var socket = io(host, option);
     var user = {
         name: null,
         rooms: []
@@ -23,6 +30,10 @@ $(document).ready(function() {
         }
         return null;
     };
+
+    function renderFriend(friend) {
+        $('#friends').append('<li class="list-group-item">' + friend + '</li>');
+    }
 
     function renderRoom(room) {
         $('#rooms').append('<li id="' + room.name + '" class="list-group-item">' + room.name + ' <span class="badge">' + room.talks.length + '</span></li>');
@@ -47,7 +58,7 @@ $(document).ready(function() {
         room_badge.text(Number(room_badge.text()) + 1);
     }
 
-    function clear(){
+    function clear() {
         //clear before start.
         $('#friends').empty();
         $('#rooms').empty();
@@ -58,14 +69,21 @@ $(document).ready(function() {
         clear();
 
         user = p_user;
-        console.log('auth', user);
+        // console.log('auth', user);
         user.friends.forEach(function(friend) {
-            $('#friends').append('<li class="list-group-item">' + friend + '</li>');
+            renderFriend(friend);
+            // $('#friends').append('<li class="list-group-item">' + friend + '</li>');
         });
         user.rooms.forEach(function(room) {
             renderRoom(room);
             setMessageBedge(room.name, room.talks.length);
         });
+    });
+
+    socket.on('friend', function(friend) {
+        console.log('friend', friend);
+        user.friends.push(friend);
+        renderFriend(friend);
     });
 
     socket.on('room', function(room) {
@@ -94,16 +112,31 @@ $(document).ready(function() {
         socket.emit('auth', user);
     });
 
+    //TODO check disconnect
     $('#exitbtn').click(function() {
+        // socket.emit('disconnect');
         socket.emit('exit', function() {
             console.log('exit success.');
             clear();
         });
     });
 
+    $('#addfriendbtn').click(function() {
+        var friend_name = $('#friend').val();
+
+        socket.emit('friend', friend_name);
+        user.friends.push(friend_name);
+        renderFriend(friend_name);
+    });
+
+    $('#infobtn').click(function() {
+        socket.emit('info');
+    });
+
+
     $('#friends').on('click', 'li', function() {
         var friend_name = $(this).text();
-        $('#friend').addClass('label-primary').text(friend_name);
+        // $('#friend').addClass('label-primary').text(friend_name);
 
         var room = findRoomByFriend(friend_name);
         if (!room) {
@@ -155,9 +188,15 @@ $(document).ready(function() {
         $('#m').val('');
     });
 
+    socket.on('time', function(time) {
+        // console.log('Server Time:%s', time);
+        $('#timer').text(time);
+    });
+
     // Debugging Listener
     socket.on('connect', function() {
         console.log('Socket[%s] is connected.', socket.id);
+        socket.emit('time');
     });
 
     socket.on('connect_error', function(err) {
