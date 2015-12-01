@@ -7,13 +7,14 @@
 var app = require('../app');
 var debug = require('debug')('tie:server');
 var http = require('http');
-var tie = require('../tie');
+// var tie = require('../tie');
+var chat = require('../chat');
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
+var port = normalizePort(process.env.PORT || '4000');
 app.set('port', port);
 
 /**
@@ -21,7 +22,9 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
-var tie_server = tie.createServer(server);
+// var tie_server = tie.createServer(server);
+var chat_server = chat.createServer(server);
+
 /**
  * Listen on provided port, on all network interfaces.
  */
