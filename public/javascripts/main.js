@@ -44,6 +44,8 @@ $(document).ready(function() {
     }
 
     function addParticipantsMessage(data) {
+        console.log('addParticipantsMessage',data);
+
         var message = '';
         if (data.numUsers === 1) {
             message += "there's 1 participant";
@@ -69,22 +71,22 @@ $(document).ready(function() {
         }
     }
     // Sets the client's roomname
+    // function setRoomname() {
+    //     roomname = cleanInput($roomnameInput.val().trim());
+    //     username = 'Guest'
+    //     // If the username is valid
+    //     if (roomname) {
+    //         $roomPage.fadeOut();
+    //         $chatPage.show();
+    //         $roomPage.off('click');
+    //         $currentInput = $inputMessage.focus();
+    //
+    //         // Tell the server your roomname
+    //         // socket.emit('add room', roomname);
+    //         socket.emit('add user', roomname, username);
+    //     }
+    // }
     function setRoomname() {
-        roomname = cleanInput($roomnameInput.val().trim());
-        username = 'Guest';
-        // If the username is valid
-        if (roomname) {
-            $roomPage.fadeOut();
-            $chatPage.show();
-            $roomPage.off('click');
-            $currentInput = $inputMessage.focus();
-
-            // Tell the server your roomname
-            // socket.emit('add room', roomname);
-            socket.emit('add user', roomname);
-        }
-    }
-    function setRoomname_backup() {
         roomname = cleanInput($roomnameInput.val().trim());
 
         // If the username is valid
@@ -95,7 +97,7 @@ $(document).ready(function() {
             $currentInput = $usernameInput.focus();
 
             // Tell the server your roomname
-            socket.emit('add room', roomname);
+            // socket.emit('add room', roomname);
         }
     }
 
@@ -134,9 +136,8 @@ $(document).ready(function() {
 
         var $usernameDiv = $('<span/>');
         if (data.username !== username)
-            $usernameDiv = $('<span class="glyphicon glyphicon-user"/>')
-            // .text(data.username)
-            .css('margin-right','10px')
+            $usernameDiv = $('<span class="username"/>')
+            .text(data.username)
             .css('color', getUsernameColor(data.username));
         var $messageBodyDiv = $('<span class="messageBody">')
             .text(data.message);
@@ -145,7 +146,6 @@ $(document).ready(function() {
         var typingClass = data.typing ? 'typing' :
             (data.username === username) ? 'mymessage' : 'yourmessage';
 
-        console.log('addChatMessage', data, typingClass);
         var $messageDiv = $('<li class="message"/>')
             .data('username', data.username)
             .addClass(typingClass)
@@ -286,9 +286,10 @@ $(document).ready(function() {
 
     // Whenever the server emits 'login', log the login message
     socket.on('login', function(data) {
+        console.log('login',data);
         connected = true;
         // Display the welcome message
-        var message = "Share this: " + server + '/' + roomname;
+        var message = "Share this: " + server + '/' + roomname ;
         log(message, {
             prepend: true
         });

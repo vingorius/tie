@@ -2,15 +2,21 @@ doctype html
 head
 	meta(charset='UTF-8')
 	title #{roomname}
-	link(rel='stylesheet', href='/bower_components/bootstrap/dist/css/bootstrap.min.css')
-	link(rel='stylesheet', href='/bower_components/bootstrap/dist/css/bootstrap-theme.min.css')
+	//- link(rel='stylesheet', href='/bower_components/bootstrap/dist/css/bootstrap.min.css')
+	//- link(rel='stylesheet', href='/bower_components/bootstrap/dist/css/bootstrap-theme.min.css')
 	link(rel='stylesheet', href='/stylesheets/style.css')
 
 ul.pages
 	li#chatPage.chat.page
-		div.chatArea
+		div.topbar
+			input#roomurl(style={'margin':'0px'},value='http://localhost:4000/hello') 
+		div.chatArea(style={'padding-top':'30px'})
 			ul#messages.messages
 		input#inputMessage.inputMessage(placeholder='Type here...')
+	//- li#chatPage.chat.page
+	//- 	div.chatArea
+	//- 		ul#messages.messages
+	//- 	input#inputMessage.inputMessage(placeholder='Type here...')
 	li#loginPage.login.page
 		div.form
 			h3.title What's your nickname?
@@ -22,5 +28,5 @@ ul.pages
 
 script(src='/socket.io/socket.io.js')
 script(src='/bower_components/jquery/dist/jquery.min.js')
-script(src='/bower_components/bootstrap/dist/js/bootstrap.min.js')
+//- script(src='/bower_components/bootstrap/dist/js/bootstrap.min.js')
 script(src='/javascripts/main.js')

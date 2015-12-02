@@ -23,11 +23,12 @@ exports.createServer = function(http) {
         });
 
         // when the client emits 'add user', this listens and executes
-        socket.on('add user', function(roomname) {
-            console.log('add user: roomname:%s',roomname);
-            numUsers[socket.roomname] = ++numUsers[socket.roomname]||1;
+        socket.on('add user', function(roomname, username) {
+            numUsers[socket.roomname] = ++numUsers[socket.roomname] || 1;
+            var no = numUsers[socket.roomname];
+            console.log('add user: roomname:%s, %d users', roomname, no);
             // we store the username in the socket session for this client
-            var username = 'Guest'+numUsers[socket.roomname];
+            // var username = 'Guest' + numUsers[socket.roomname];
             socket.username = username;
             socket.roomname = roomname;
             socket.join(socket.roomname);
@@ -36,12 +37,12 @@ exports.createServer = function(http) {
 
             addedUser = true;
             socket.emit('login', {
-                numUsers: numUsers[socket.roomname]
+                'numUsers': no
             });
             // echo globally (all clients) that a person has connected
             socket.to(socket.roomname).broadcast.emit('user joined', {
                 username: socket.username,
-                numUsers: numUsers[socket.roomname]
+                numUsers: no,
             });
         });
 
