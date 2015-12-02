@@ -71,6 +71,21 @@ $(document).ready(function() {
     // Sets the client's roomname
     function setRoomname() {
         roomname = cleanInput($roomnameInput.val().trim());
+        username = 'Guest';
+        // If the username is valid
+        if (roomname) {
+            $roomPage.fadeOut();
+            $chatPage.show();
+            $roomPage.off('click');
+            $currentInput = $inputMessage.focus();
+
+            // Tell the server your roomname
+            // socket.emit('add room', roomname);
+            socket.emit('add user', roomname);
+        }
+    }
+    function setRoomname_backup() {
+        roomname = cleanInput($roomnameInput.val().trim());
 
         // If the username is valid
         if (roomname) {
@@ -117,13 +132,20 @@ $(document).ready(function() {
             $typingMessages.remove();
         }
 
-        var $usernameDiv = $('<span class="username"/>')
-            .text(data.username)
+        var $usernameDiv = $('<span/>');
+        if (data.username !== username)
+            $usernameDiv = $('<span class="glyphicon glyphicon-user"/>')
+            // .text(data.username)
+            .css('margin-right','10px')
             .css('color', getUsernameColor(data.username));
         var $messageBodyDiv = $('<span class="messageBody">')
             .text(data.message);
 
-        var typingClass = data.typing ? 'typing' : '';
+        // var typingClass = data.typing ? 'typing' : '';
+        var typingClass = data.typing ? 'typing' :
+            (data.username === username) ? 'mymessage' : 'yourmessage';
+
+        console.log('addChatMessage', data, typingClass);
         var $messageDiv = $('<li class="message"/>')
             .data('username', data.username)
             .addClass(typingClass)

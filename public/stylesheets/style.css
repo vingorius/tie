@@ -47,7 +47,7 @@ ul {
     top: 50%;
     width: 100%;
 }
-.login.page .form .pageInput{
+.login.page .form .pageInput {
     background-color: transparent;
     border: none;
     border-bottom: 2px solid #fff;
@@ -63,22 +63,28 @@ ul {
     font-size: 200%;
     letter-spacing: 3px;
 }
-.login.page .title, .login.page .pageInput{
+.login.page .title, .login.page .pageInput {
     color: #fff;
     font-weight: 100;
 }
 
 /* Chat page */
 
-#chatPage,#loginPage {
+#chatPage, #loginPage {
     display: none;
 }
-
 
 /* Font */
 
 .messages {
-    font-size: 150%;
+    /*font-size: 150%;*/
+    font-size: 100%;
+}
+.mymessage {
+    text-align: right;
+}
+.yourmessage {
+    text-align: left;
 }
 .inputMessage {
     font-size: 100%;
