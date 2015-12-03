@@ -301,6 +301,12 @@ $(document).ready(function() {
         addChatMessage(data);
     });
 
+    // Whenever the server emits 'new name', update user name
+    socket.on('new name', function(data) {
+        username = data;
+        log('changed to ' + username + '.');
+    });
+
     // Whenever the server emits 'user joined', log it in the chat body
     socket.on('user joined', function(data) {
         log(data.username + ' joined');

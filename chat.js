@@ -15,6 +15,12 @@ exports.createServer = function(http) {
 
         // when the client emits 'new message', this listens and executes
         socket.on('new message', function(data) {
+            if (data.startsWith('/')) {
+                var newname = data.substring(1);
+                data = socket.username + ' changed his name to ' + newname;
+                socket.username = newname;
+                socket.emit('new name',newname);
+            }
             // we tell the client to execute 'new message'
             socket.to(socket.roomname).broadcast.emit('new message', {
                 username: socket.username,
