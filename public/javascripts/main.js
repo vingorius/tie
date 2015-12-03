@@ -1,6 +1,7 @@
 $(document).ready(function() {
     var FADE_TIME = 150; // ms
     var TYPING_TIMER_LENGTH = 400; // ms
+    var CIPER_MIN_LENGTH = 4; // char
     var COLORS = [
         '#e21400', '#91580f', '#f8a700', '#f78b00',
         '#58dc00', '#287b00', '#a8f07a', '#4ae8c4',
@@ -16,7 +17,6 @@ $(document).ready(function() {
     var $inputMessage = $('#inputMessage'); // Input message input box
     var $inputURL = $('#inputURL'); // Input url box
 
-    // var $loginPage = $('#loginPage'); // The login page
     var $roomPage = $('#roomPage'); // The room page
     var $ciperPage = $('#ciperPage'); // The ciper page
     var $chatPage = $('#chatPage'); // The chatroom page
@@ -27,7 +27,6 @@ $(document).ready(function() {
     var connected = false;
     var typing = false;
     var lastTypingTime;
-    // var $currentInput = $usernameInput.focus();
     var $currentInput = $roomnameInput.focus();
 
     var option = {
@@ -66,25 +65,11 @@ $(document).ready(function() {
     }
 
     // Sets the client's username
-    function setUsername() {
-        username = cleanInput($usernameInput.val().trim());
-
-        // If the username is valid
-        if (username) {
-            $loginPage.fadeOut();
-            $chatPage.show();
-            $loginPage.off('click');
-            $currentInput = $inputMessage.focus();
-
-            // Tell the server your username
-            socket.emit('add user', roomname, username);
-        }
-    }
-    // Sets the client's username
     function setCiper() {
         ciper = cleanInput($ciperInput.val().trim());
 
         // If the ciper is valid
+        console.log(ciper,ciper.length);
         if (ciper) {
             $ciperPage.fadeOut();
             $chatPage.show();
@@ -94,6 +79,12 @@ $(document).ready(function() {
             // Tell the server your username
             socket.emit('add user', roomname);
         }
+    }
+    // validate ciper, i should length 4+
+    function validateCiper(){
+        ciper = cleanInput($ciperInput.val().trim());
+        if(ciper.length < CIPER_MIN_LENGTH) return false;
+        else return true;
     }
     // Sets the client's roomname
     // function setRoomname() {
@@ -117,7 +108,6 @@ $(document).ready(function() {
         // If the roomname is valid
         if (roomname) {
             $roomPage.fadeOut();
-            // $loginPage.show();
             $ciperPage.show();
             $roomPage.off('click');
             $currentInput = $ciperInput.focus();
@@ -296,11 +286,6 @@ $(document).ready(function() {
 
     // Click events
 
-    // Focus input when clicking anywhere on login page
-    // $loginPage.click(function() {
-    //     $currentInput.focus();
-    // });
-
     // Focus input when clicking anywhere on ciper page
     $ciperPage.click(function() {
         $currentInput.focus();
@@ -377,4 +362,10 @@ $(document).ready(function() {
     socket.on('stop typing', function(data) {
         removeChatTyping(data);
     });
+    //
+    // // Whenever the server emits 'error', show it as log
+    // socket.on('error', function(data) {
+    //     log(data);
+    // });
+
 });
