@@ -13,6 +13,7 @@ $(document).ready(function() {
     var $roomnameInput = $('#roomnameInput'); // Input for username
     var $messages = $('#messages'); // Messages area
     var $inputMessage = $('#inputMessage'); // Input message input box
+    var $inputURL = $('#impurtURL'); // Input url box
 
     var $loginPage = $('#loginPage'); // The login page
     var $chatPage = $('#chatPage'); // The chatroom page
@@ -44,7 +45,7 @@ $(document).ready(function() {
     }
 
     function addParticipantsMessage(data) {
-        console.log('addParticipantsMessage',data);
+        console.log('addParticipantsMessage', data);
 
         var message = '';
         if (data.numUsers === 1) {
@@ -286,10 +287,13 @@ $(document).ready(function() {
 
     // Whenever the server emits 'login', log the login message
     socket.on('login', function(data) {
-        console.log('login',data);
+        console.log('login', data);
         connected = true;
         // Display the welcome message
-        var message = "Share this: " + server + '/' + roomname ;
+        var url = server + '/' + roomname;
+        $inputURL.val(url);
+        // var message = "Share this: " + server + '/' + roomname;
+        var message = 'Welcome \'' + username +  '\' on \'' + roomname + '\'.';
         log(message, {
             prepend: true
         });
