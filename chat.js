@@ -15,13 +15,8 @@ exports.createServer = function(http) {
 
         // when the client emits 'new message', this listens and executes
         socket.on('new message', function(data) {
-            if (typeof data === 'string' && data.startsWith('/')) {
-                var newname = data.substring(1);
-                data = socket.username + ' changed his name to ' + newname;
-                socket.username = newname;
-                socket.emit('new name',newname);
-            }
             // we tell the client to execute 'new message'
+            console.log('new message', data);
             socket.to(socket.roomname).broadcast.emit('new message', {
                 username: socket.username,
                 message: data
@@ -29,9 +24,10 @@ exports.createServer = function(http) {
         });
 
         // when the client emits 'add user', this listens and executes
-        socket.on('add user', function(roomname, username) {
+        socket.on('add user', function(roomname) {
             numUsers[socket.roomname] = ++numUsers[socket.roomname] || 1;
             var no = numUsers[socket.roomname];
+            var username = 'Usr' + no;
             console.log('add user: roomname:%s, %d users', roomname, no);
             // we store the username in the socket session for this client
             // var username = 'Guest' + numUsers[socket.roomname];
@@ -43,7 +39,8 @@ exports.createServer = function(http) {
 
             addedUser = true;
             socket.emit('login', {
-                'numUsers': no
+                'numUsers': no,
+                username: username,
             });
             // echo globally (all clients) that a person has connected
             socket.to(socket.roomname).broadcast.emit('user joined', {
@@ -51,6 +48,18 @@ exports.createServer = function(http) {
                 numUsers: no,
             });
         });
+
+        // when the client emits 'new name', change it's name
+        socket.on('new name', function(newname) {
+            data = socket.username + ' changed his name to ' + newname;
+            //delete old user
+            delete usernames[socket.username];
+            //set changed one
+            usernames[newname] = newname;
+            socket.username = newname;
+            socket.to(socket.roomname).broadcast.emit('new name', data);
+        });
+
 
         // when the client emits 'typing', we broadcast it to others
         socket.on('typing', function() {

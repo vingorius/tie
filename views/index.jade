@@ -1,15 +1,16 @@
 doctype html
 head
 	meta(charset='UTF-8')
-	title #{roomname}
+	title Hush
 	//- link(rel='stylesheet', href='/bower_components/bootstrap/dist/css/bootstrap.min.css')
 	//- link(rel='stylesheet', href='/bower_components/bootstrap/dist/css/bootstrap-theme.min.css')
 	link(rel='stylesheet', href='/stylesheets/style.css')
 
 ul.pages
 	li#chatPage.chat.page
-		div.topbar
-			input#impurtURL(style={'margin':'0px'}) 
+		div.topArea
+			a(href='/') Home
+			input#inputURL
 		div.chatArea(style={'padding-top':'30px'})
 			ul#messages.messages
 		input#inputMessage.inputMessage(placeholder='Type here...')
@@ -17,10 +18,14 @@ ul.pages
 	//- 	div.chatArea
 	//- 		ul#messages.messages
 	//- 	input#inputMessage.inputMessage(placeholder='Type here...')
-	li#loginPage.login.page
+	li#ciperPage.login.page
 		div.form
-			h3.title What's your nickname?
-			input#usernameInput.pageInput(type='text', maxlength='14')
+			h3.title Enter Key!
+			input#ciperInput.pageInput(type='text',minlength='4', maxlength='14')
+	//- li#loginPage.login.page
+	//- 	div.form
+	//- 		h3.title What's your nickname?
+	//- 		input#usernameInput.pageInput(type='text', maxlength='14')
 	li#roomPage.login.page
 		div.form
 			h3.title Create or join a room
@@ -28,5 +33,6 @@ ul.pages
 
 script(src='/socket.io/socket.io.js')
 script(src='/bower_components/jquery/dist/jquery.min.js')
+script(src='/bower_components/crypto-js/crypto-js.js')
 //- script(src='/bower_components/bootstrap/dist/js/bootstrap.min.js')
 script(src='/javascripts/main.js')

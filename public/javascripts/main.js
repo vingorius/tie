@@ -9,19 +9,21 @@ $(document).ready(function() {
 
     // Initialize variables
     var $window = $(window);
-    var $usernameInput = $('#usernameInput'); // Input for username
+    // var $usernameInput = $('#usernameInput'); // Input for username
     var $roomnameInput = $('#roomnameInput'); // Input for username
+    var $ciperInput = $('#ciperInput'); // Input for username
     var $messages = $('#messages'); // Messages area
     var $inputMessage = $('#inputMessage'); // Input message input box
-    var $inputURL = $('#impurtURL'); // Input url box
+    var $inputURL = $('#inputURL'); // Input url box
 
-    var $loginPage = $('#loginPage'); // The login page
-    var $chatPage = $('#chatPage'); // The chatroom page
+    // var $loginPage = $('#loginPage'); // The login page
     var $roomPage = $('#roomPage'); // The room page
+    var $ciperPage = $('#ciperPage'); // The ciper page
+    var $chatPage = $('#chatPage'); // The chatroom page
 
     var server = window.location.origin;
     // Prompt for setting a username
-    var username, roomname;
+    var username, roomname, ciper;
     var connected = false;
     var typing = false;
     var lastTypingTime;
@@ -40,7 +42,6 @@ $(document).ready(function() {
      * if there's roomname on url, it was invited.
      */
     if ($roomnameInput.val()) {
-        console.log('roomname', $roomnameInput);
         setRoomname();
     }
 
@@ -54,6 +55,14 @@ $(document).ready(function() {
             message += "there are " + data.numUsers + " participants";
         }
         log(message);
+    }
+    // run Command, change username
+    function runCommand(cmd) {
+        var newname = cmd.substring(1);
+        username = newname;
+        socket.emit('new name', username);
+        log('chnaged to ' + username);
+        $inputMessage.val('');
     }
 
     // Sets the client's username
@@ -69,6 +78,21 @@ $(document).ready(function() {
 
             // Tell the server your username
             socket.emit('add user', roomname, username);
+        }
+    }
+    // Sets the client's username
+    function setCiper() {
+        ciper = cleanInput($ciperInput.val().trim());
+
+        // If the ciper is valid
+        if (ciper) {
+            $ciperPage.fadeOut();
+            $chatPage.show();
+            $ciperPage.off('click');
+            $currentInput = $inputMessage.focus();
+
+            // Tell the server your username
+            socket.emit('add user', roomname);
         }
     }
     // Sets the client's roomname
@@ -90,15 +114,13 @@ $(document).ready(function() {
     function setRoomname() {
         roomname = cleanInput($roomnameInput.val().trim());
 
-        // If the username is valid
+        // If the roomname is valid
         if (roomname) {
             $roomPage.fadeOut();
-            $loginPage.show();
+            // $loginPage.show();
+            $ciperPage.show();
             $roomPage.off('click');
-            $currentInput = $usernameInput.focus();
-
-            // Tell the server your roomname
-            // socket.emit('add room', roomname);
+            $currentInput = $ciperInput.focus();
         }
     }
 
@@ -115,7 +137,10 @@ $(document).ready(function() {
                 message: message
             });
             // tell server to execute 'new message' and send along one parameter
-            socket.emit('new message', message);
+            var encrypted = CryptoJS.AES.encrypt(message, ciper);
+
+            // socket.emit('new message', message);
+            socket.emit('new message', encrypted.toString());
         }
     }
 
@@ -253,17 +278,15 @@ $(document).ready(function() {
         }
         // When the client hits ENTER on their keyboard
         if (event.which === 13) {
-            if (roomname) {
-                if (username) {
-                    sendMessage();
-                    socket.emit('stop typing');
-                    typing = false;
-                } else {
-                    setUsername();
-                }
-            } else {
-                setRoomname();
-            }
+            var message = $inputMessage.val() || '';
+            if (!roomname) return setRoomname();
+            // if (!username) return setUsername();
+            if (!ciper) return setCiper();
+            if (message.startsWith('/')) return runCommand(message);
+
+            sendMessage();
+            socket.emit('stop typing');
+            typing = false;
         }
     });
 
@@ -274,7 +297,12 @@ $(document).ready(function() {
     // Click events
 
     // Focus input when clicking anywhere on login page
-    $loginPage.click(function() {
+    // $loginPage.click(function() {
+    //     $currentInput.focus();
+    // });
+
+    // Focus input when clicking anywhere on ciper page
+    $ciperPage.click(function() {
         $currentInput.focus();
     });
 
@@ -283,17 +311,20 @@ $(document).ready(function() {
         $inputMessage.focus();
     });
 
+
+
     // Socket events
 
     // Whenever the server emits 'login', log the login message
     socket.on('login', function(data) {
         console.log('login', data);
         connected = true;
+        username = data.username;
         // Display the welcome message
         var url = server + '/' + roomname;
         $inputURL.val(url);
         // var message = "Share this: " + server + '/' + roomname;
-        var message = 'Welcome \'' + username +  '\' on \'' + roomname + '\'.';
+        var message = 'Welcome \'' + username + '\' on \'' + roomname + '\'.';
         log(message, {
             prepend: true
         });
@@ -302,13 +333,26 @@ $(document).ready(function() {
 
     // Whenever the server emits 'new message', update the chat body
     socket.on('new message', function(data) {
-        addChatMessage(data);
+
+        var decrypted;
+        try {
+            decrypted = CryptoJS.AES.decrypt(data.message, ciper);
+            data.message = decrypted.toString(CryptoJS.enc.Utf8);
+            if (!data.message)
+                log('Received a broken message. key mismatch!!!');
+            else {
+                addChatMessage(data);
+            }
+        } catch (e) {
+            console.log(e);
+            if (!data.message)
+                log('Received a broken message. key mismatch!!!');
+        }
     });
 
     // Whenever the server emits 'new name', update user name
     socket.on('new name', function(data) {
-        username = data;
-        log('changed to ' + username + '.');
+        log(data);
     });
 
     // Whenever the server emits 'user joined', log it in the chat body
