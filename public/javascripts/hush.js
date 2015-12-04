@@ -107,7 +107,7 @@ $(function() {
         //     .text(data.username)
         //     .css('color', getusernameColor(data.username));
         var $tailSpan = $('<span class=\'tail\'>&nbsp;</span>');
-        var $dateSpan = $('<span/>');
+        var $dateSpan = $('<span class=\'time\'/>');
         $dateSpan.text(new Date().toLocaleTimeString());
         var $usernameDiv = $('<span/>');
         if (data.username !== username)
@@ -120,17 +120,19 @@ $(function() {
 
         var typingClass = data.typing ? 'typing' : '';
         // var typingClass = data.typing ? 'typing' :
+        var msgClass = (data.username === username) ? 'text-right' : 'text-left';
         var sideClass = (data.username === username) ? 'right' : 'left';
-        var dateClass = (data.username === username) ? 'leftdate' : 'rightdate';
-        $dateSpan.addClass(dateClass);
+        // var dateClass = (data.username === username) ? 'leftdate' : 'rightdate';
+        // $dateSpan.addClass(dateClass);
 
         var $messageDiv = $('<li class="message"/>')
             .data('username', data.username)
+            .addClass(msgClass)
             .addClass(typingClass);
 
         var $bubbleDiv = $('<div class="bubble"/>')
             .addClass(sideClass)
-            .append($tailSpan, $usernameDiv, $messageBodyDiv);
+            .append($tailSpan, $usernameDiv, $messageBodyDiv,$dateSpan);
 
         $messageDiv.append($bubbleDiv);
         // var $messageDiv = $('<li class="message bubble"/>')
@@ -290,7 +292,8 @@ $(function() {
 
     // Whenever the server emits 'new name', update user name
     socket.on('new name', function(data) {
-        log(data);
+        removeChatTyping(data);
+        log(data.message);
     });
     // Whenever the server emits 'user joined', log it in the chat body
     socket.on('user joined', function(data) {

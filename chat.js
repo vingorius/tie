@@ -43,7 +43,7 @@ exports.createServer = function(http) {
 
             var no = numUsers[socket.roomname];
             var username = 'Usr' + nameUsers[socket.roomname];
-            console.log('add user:%s roomname:%s, %d users',username, roomname, no);
+            console.log('add user:%s roomname:%s, %d users', username, roomname, no);
             // we store the username in the socket session for this client
             // var username = 'Guest' + numUsers[socket.roomname];
             socket.username = username;
@@ -65,7 +65,10 @@ exports.createServer = function(http) {
         // when the client emits 'new name', change it's name
         socket.on('new name', function(newname) {
             // socket.chkAuth();
-            data = socket.username + ' changed his name to ' + newname;
+            data = {
+                username: socket.username,
+                message: socket.username + ' changed his name to ' + newname
+            };
             //delete old user
             // delete usernames[socket.username];
             //set changed one
@@ -87,7 +90,6 @@ exports.createServer = function(http) {
         socket.on('stop typing', function() {
             // socket.chkAuth();
             socket.to(socket.roomname).broadcast.emit('stop typing', {
-                'senderid': socket.id,
                 'username': socket.username
             });
         });
