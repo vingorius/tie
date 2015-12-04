@@ -1,38 +1,42 @@
-doctype html
-head
-	meta(charset='UTF-8')
-	title Hush
-	//- link(rel='stylesheet', href='/bower_components/bootstrap/dist/css/bootstrap.min.css')
-	//- link(rel='stylesheet', href='/bower_components/bootstrap/dist/css/bootstrap-theme.min.css')
-	link(rel='stylesheet', href='/stylesheets/style.css')
+extends ./layout/basic
 
-ul.pages
-	li#chatPage.chat.page
-		div.topArea
-			a(href='/') Home
-			input#inputURL
-		div.chatArea(style={'padding-top':'30px'})
-			ul#messages.messages
-		input#inputMessage.inputMessage(placeholder='Type here...')
-	//- li#chatPage.chat.page
-	//- 	div.chatArea
-	//- 		ul#messages.messages
-	//- 	input#inputMessage.inputMessage(placeholder='Type here...')
-	li#ciperPage.login.page
-		div.form
-			h3.title Enter Key!
-			input#ciperInput.pageInput(type='text',placeholder='length must 4 more...')
-	//- li#loginPage.login.page
-	//- 	div.form
-	//- 		h3.title What's your nickname?
-	//- 		input#usernameInput.pageInput(type='text', maxlength='14')
-	li#roomPage.login.page
-		div.form
-			h3.title Create or join a room
-			input#roomnameInput.pageInput(type='text', maxlength='14', value='#{roomname}')
+block append stylesheets
+	link(rel='stylesheet', href='/stylesheets/cover.css')
 
-script(src='/socket.io/socket.io.js')
-script(src='/bower_components/jquery/dist/jquery.min.js')
-script(src='/bower_components/crypto-js/crypto-js.js')
-//- script(src='/bower_components/bootstrap/dist/js/bootstrap.min.js')
-script(src='/javascripts/main.js')
+block content
+	div.site-wrapper
+		div.site-wrapper-inner
+			div.cover-container
+				div.masthead.clearfix
+					div.inner
+						h3.masthead-brand Hush
+						//- nav
+						//- 	ul.nav.masthead-nav
+						//- 		li.active
+						//- 			a(href='#') Home
+						//- 		li
+						//- 			a(href='#') How to Use
+						//- 		li
+						//- 			a(href='#') Contact
+				div.inner.cover
+					h1.cover-heading Create a room and invite friends.
+					p.lead
+						form#startForm(action='')
+							div.input-group
+								span#basic-addon3.input-group-addon http://hush.net/
+								input#basic-url.form-control(type='text', aria-describedby='basic-addon3', placeholder='room name')
+								span.input-group-btn
+									button#startBtn.btn.btn-default(type='submit') Start
+					p.lead
+						| No Login, No Install, Nothing Saved 
+						//- a.btn.btn-lg.btn-default(href='#') Learn more
+				div.mastfoot
+					div.inner
+						p
+							| Cover template for 
+							a(href='http://getbootstrap.com') Bootstrap
+							| , by 
+							a(href='https://twitter.com/mdo') @mdo
+							| .
+block append scripts
+	script(src='/javascripts/index.js')

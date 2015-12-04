@@ -1,0 +1,42 @@
+doctype html
+head
+	meta(charset='UTF-8')
+	title Hush
+	//- link(rel='stylesheet', href='/bower_components/bootstrap/dist/css/bootstrap.min.css')
+	//- link(rel='stylesheet', href='/bower_components/bootstrap/dist/css/bootstrap-theme.min.css')
+	link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css')
+	link(rel='stylesheet', href='/stylesheets/style_old.css')
+
+ul.pages
+	li#chatPage.chat.page
+		div.topArea
+			a(href='/')
+				i.fa.fa-home(style={'color':'white'})
+			input#inputURL
+			a(href='#')
+				i.fa.fa-clipboard(style={'color':'white'})
+		div.chatArea(style={'padding-top':'30px'})
+			ul#messages.messages
+		input#inputMessage.inputMessage(placeholder='Type here...')
+	//- li#chatPage.chat.page
+	//- 	div.chatArea
+	//- 		ul#messages.messages
+	//- 	input#inputMessage.inputMessage(placeholder='Type here...')
+	li#ciperPage.login.page
+		div.form
+			h3.title Enter Key!
+			input#ciperInput.pageInput(type='text',placeholder='length must 4 more...')
+	//- li#loginPage.login.page
+	//- 	div.form
+	//- 		h3.title What's your nickname?
+	//- 		input#usernameInput.pageInput(type='text', maxlength='14')
+	li#roomPage.login.page
+		div.form
+			h3.title Create or join a room
+			input#roomnameInput.pageInput(type='text', maxlength='14', value='#{roomname}')
+
+script(src='/socket.io/socket.io.js')
+script(src='/bower_components/jquery/dist/jquery.min.js')
+script(src='/bower_components/crypto-js/crypto-js.js')
+//- script(src='/bower_components/bootstrap/dist/js/bootstrap.min.js')
+script(src='/javascripts/main.js')

@@ -69,7 +69,7 @@ $(document).ready(function() {
         ciper = cleanInput($ciperInput.val().trim());
 
         // If the ciper is valid
-        console.log(ciper,ciper.length);
+        console.log(ciper, ciper.length);
         if (ciper) {
             $ciperPage.fadeOut();
             $chatPage.show();
@@ -81,9 +81,9 @@ $(document).ready(function() {
         }
     }
     // validate ciper, i should length 4+
-    function validateCiper(){
+    function validateCiper() {
         ciper = cleanInput($ciperInput.val().trim());
-        if(ciper.length < CIPER_MIN_LENGTH) return false;
+        if (ciper.length < CIPER_MIN_LENGTH) return false;
         else return true;
     }
     // Sets the client's roomname
@@ -189,6 +189,7 @@ $(document).ready(function() {
     // options.fade - If the element should fade-in (default = true)
     // options.prepend - If the element should prepend
     //   all other messages (default = false)
+    // options.color - text color
     function addMessageElement(el, options) {
         var $el = $(el);
 
@@ -212,6 +213,12 @@ $(document).ready(function() {
         } else {
             $messages.append($el);
         }
+
+        // Apply color option
+        if (options.color) {
+            $el.css('color', options.color);
+        }
+
         $messages[0].scrollTop = $messages[0].scrollHeight;
     }
 
@@ -324,14 +331,18 @@ $(document).ready(function() {
             decrypted = CryptoJS.AES.decrypt(data.message, ciper);
             data.message = decrypted.toString(CryptoJS.enc.Utf8);
             if (!data.message)
-                log('Received a broken message. key mismatch!!!');
+                log('Received a broken message. key mismatch!!!', {
+                    color: 'red'
+                });
             else {
                 addChatMessage(data);
             }
         } catch (e) {
             console.log(e);
-            if (!data.message)
-                log('Received a broken message. key mismatch!!!');
+            // if (!data.message)
+            log('Received a broken message. key mismatch!!!', {
+                color: 'red'
+            });
         }
     });
 
@@ -362,10 +373,12 @@ $(document).ready(function() {
     socket.on('stop typing', function(data) {
         removeChatTyping(data);
     });
-    //
-    // // Whenever the server emits 'error', show it as log
-    // socket.on('error', function(data) {
-    //     log(data);
-    // });
+
+    // Whenever the server emits 'error', show it as log
+    socket.on('error', function(data) {
+        log(data, {
+            color: 'red'
+        });
+    });
 
 });

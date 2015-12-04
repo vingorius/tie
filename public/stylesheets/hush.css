@@ -1,0 +1,207 @@
+/* Fix user-agent */
+
+* {
+    box-sizing: border-box;
+}
+html {
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+}
+html, input {
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+}
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+ul {
+    list-style: none;
+    word-wrap: break-word;
+}
+
+/* Pages */
+
+.pages {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+.page {
+    height: 100%;
+    position: absolute;
+    width: 100%;
+}
+
+/* Login Page */
+
+.login.page {
+    background-color: #000;
+}
+.login.page .form {
+    height: 100px;
+    margin-top: -100px;
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    width: 100%;
+}
+.login.page .form .ciperInput {
+    background-color: transparent;
+    border: none;
+    border-bottom: 2px solid #fff;
+    outline: none;
+    padding-bottom: 15px;
+    text-align: center;
+    width: 400px;
+}
+.login.page .title {
+    font-size: 200%;
+}
+.login.page .ciperInput {
+    font-size: 200%;
+    letter-spacing: 3px;
+}
+.login.page .title, .login.page .ciperInput {
+    color: #fff;
+    font-weight: 100;
+}
+
+/* Chat page */
+
+.chat.page {
+    display: none;
+}
+
+/* Font */
+
+.messages {
+    font-size: 150%;
+}
+.inputMessage {
+    font-size: 100%;
+}
+.log {
+    color: gray;
+    font-size: 70%;
+    margin: 5px;
+    text-align: center;
+}
+
+/* Messages */
+
+.chatArea {
+    height: 100%;
+    padding-bottom: 60px;
+    /*background-color: #fcf3cf;*/
+}
+.messages {
+    height: 100%;
+    margin: 0;
+    overflow-y: scroll;
+    padding: 10px 20px 10px 20px;
+}
+.message.typing .messageBody {
+    color: gray;
+}
+.mymessage {
+    text-align: right;
+    padding-left: 60px;
+}
+.yourmessage {
+    text-align: left;
+    padding-right: 60px;
+}
+.username {
+    float: left;
+    font-weight: 700;
+    overflow: hidden;
+    padding-right: 15px;
+    text-align: right;
+}
+
+/* Input */
+
+
+.inputMessage {
+    border: 10px solid #000;
+    bottom: 0;
+    height: 60px;
+    left: 0;
+    outline: none;
+    padding-left: 10px;
+    position: absolute;
+    right: 0;
+    width: 100%;
+    background-color: #fcf3cf;
+}
+
+/* Chat Bubble */
+
+.bubble {
+    background-color: #fcf3cf;
+    /*background-color: #F2F2F2;*/
+    border-radius: 5px;
+    border-radius: 5px;
+    border: 1px solid #BBB;
+    box-shadow: 0px 1px 6px #B2B2B2;
+    display: block;
+    padding: 10px 18px;
+    margin: 1em 18px;
+    position: relative;
+    vertical-align: top;
+}
+.bubble.left {
+    text-align: left;
+    margin-right: :40%;
+    width: 60%;
+
+}
+.bubble.left .tail {
+    top: 12px;
+    left: -18px;
+}
+.tail {
+    position: absolute;
+    height: 18px;
+    width: 18px;
+    overflow: hidden;
+}
+.bubble.left .tail::before {
+    left: 12px;
+    transform: skewX(-45deg);
+}
+.tail::before {
+    border: 1px solid #BBB;
+    background-color: #F2F2F2;
+    box-shadow: 0px 1px 6px #B2B2B2;
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0px;
+    height: 12px;
+    width: 12px;
+}
+.bubble.right {
+    text-align: right;
+    margin-left:40%;
+    width: 60%;
+}
+.bubble.right .tail {
+    top: 12px;
+    right: -18px;
+}
+.bubble.right .tail::before {
+    right: 12px;
+    transform: skewX(45deg);
+}
+
+.leftdate {
+    float: left;
+    font-size: 10px;
+}
+.rightdate {
+    float: right;
+    font-size: 10px;
+}

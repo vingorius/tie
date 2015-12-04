@@ -1,0 +1,21 @@
+extends ./layout/basic
+
+block append stylesheets
+	link(rel='stylesheet', href='/stylesheets/hush.css')
+
+block content
+	div
+		ul.pages
+			li.chat.page
+				.chatArea
+					ul#messages.messages
+				input#inputMessage.inputMessage(placeholder='Type here...')
+			li.login.page
+				.form
+					h3.title Enter Key!
+					input#ciperInput.ciperInput(type='text', maxlength='14')
+
+block append scripts
+	script(src='/bower_components/crypto-js/crypto-js.js')
+	script(src='/socket.io/socket.io.js')
+	script(src='/javascripts/hush.js')

@@ -3,16 +3,14 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-    res.render('index', {
-        'roomname': ''
-    });
+    res.render('index');
 });
 
-router.get('/:roomname', function(req, res, next) {
-    console.log('roomname', req.params.roomname);
-    var roomname = req.params.roomname || '';
-    res.render('index', {
-        'roomname': roomname
+router.get('/:room', function(req, res, next) {
+    console.log('room', req.params.room);
+    var room = req.params.room || '';
+    res.render('hush', {
+        'room': room
     });
 });
 

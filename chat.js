@@ -7,12 +7,13 @@ exports.createServer = function(http) {
     // Chatroom
 
     // usernames which are currently connected to the chat
-    var usernames = {};
+    // var usernames = {};
     var numUsers = {};
+    var nameUsers = {};
 
     nsp.on('connection', function(socket) {
-        var addedUser = false;
-        // socket.auth = false;
+        // var addedUser = false;
+        socket.auth = false;
 
         // socket.err = function(msg) {
         //     socket.emit('err', msg);
@@ -25,31 +26,34 @@ exports.createServer = function(http) {
             // socket.chkAuth();
             // we tell the client to execute 'new message'
             socket.to(socket.roomname).broadcast.emit('new message', {
-                username: socket.username,
-                message: data
+                'username': socket.username,
+                'message': data
             });
         });
 
         // when the client emits 'add user', this listens and executes
         socket.on('add user', function(roomname) {
-            // socket.auth = true;
+            socket.auth = true;
 
             socket.roomname = roomname;
+            // room 에 있는 사람.
             numUsers[socket.roomname] = ++numUsers[socket.roomname] || 1;
+            // 지금까지 룸에 들어온 사람.
+            nameUsers[socket.roomname] = ++nameUsers[socket.roomname] || 1;
+
             var no = numUsers[socket.roomname];
-            var username = 'Usr' + no;
-            console.log('add user: roomname:%s, %d users', roomname, no);
+            var username = 'Usr' + nameUsers[socket.roomname];
+            console.log('add user:%s roomname:%s, %d users',username, roomname, no);
             // we store the username in the socket session for this client
             // var username = 'Guest' + numUsers[socket.roomname];
             socket.username = username;
             socket.join(socket.roomname);
             // add the client's username to the global list
-            usernames[username] = username;
+            // usernames[username] = username;
 
-            addedUser = true;
             socket.emit('login', {
+                'username': socket.username,
                 'numUsers': no,
-                'username': username,
             });
             // echo globally (all clients) that a person has connected
             socket.to(socket.roomname).broadcast.emit('user joined', {
@@ -63,9 +67,9 @@ exports.createServer = function(http) {
             // socket.chkAuth();
             data = socket.username + ' changed his name to ' + newname;
             //delete old user
-            delete usernames[socket.username];
+            // delete usernames[socket.username];
             //set changed one
-            usernames[newname] = newname;
+            // usernames[newname] = newname;
             socket.username = newname;
             socket.to(socket.roomname).broadcast.emit('new name', data);
         });
@@ -75,7 +79,7 @@ exports.createServer = function(http) {
         socket.on('typing', function() {
             // socket.chkAuth();
             socket.to(socket.roomname).broadcast.emit('typing', {
-                username: socket.username
+                'username': socket.username
             });
         });
 
@@ -83,21 +87,22 @@ exports.createServer = function(http) {
         socket.on('stop typing', function() {
             // socket.chkAuth();
             socket.to(socket.roomname).broadcast.emit('stop typing', {
-                username: socket.username
+                'senderid': socket.id,
+                'username': socket.username
             });
         });
 
         // when the user disconnects.. perform this
         socket.on('disconnect', function() {
             // remove the username from global usernames list
-            if (addedUser) {
-                delete usernames[socket.username];
+            if (socket.auth) {
+                // delete usernames[socket.username];
                 --numUsers[socket.roomname];
                 var no = numUsers[socket.roomname];
                 // echo globally that this client has left
                 socket.to(socket.roomname).broadcast.emit('user left', {
-                    username: socket.username,
-                    numUsers: no
+                    'username': socket.username,
+                    'numUsers': no
                 });
             }
         });

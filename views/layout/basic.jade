@@ -1,0 +1,19 @@
+doctype html
+html
+	meta(charset='utf-8')
+	meta(content='IE=edge,chrome=1', http-equiv='X-UA-Compatible')
+	meta(content='No Install, No Sa', name='description')
+	meta(content='City Goat', name='author')
+	meta(name='viewport', content='width=device-width, initial-scale=1.0')
+	head
+		title= title
+		block stylesheets
+			link(rel='stylesheet', href='/bower_components/bootstrap/dist/css/bootstrap.min.css')
+			link(rel='stylesheet', href='/bower_components/bootstrap/dist/css/bootstrap-theme.min.css')
+			link(rel='stylesheet', href='/bower_components/font-awesome/css/font-awesome.min.css')
+	body
+		block content
+
+		block scripts
+			script(src='/bower_components/jquery/dist/jquery.min.js')
+			script(src='/bower_components/bootstrap/dist/js/bootstrap.min.js')
