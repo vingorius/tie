@@ -105,6 +105,11 @@ body {
     padding: 10px 20px;
     font-weight: bold;
 }
+.input-group {
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
 
 /*
  * Footer

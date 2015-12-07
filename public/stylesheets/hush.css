@@ -54,7 +54,7 @@ ul {
     outline: none;
     padding-bottom: 15px;
     text-align: center;
-    width: 400px;
+    max-width: 400px;
 }
 .login.page .title {
     font-size: 200%;
