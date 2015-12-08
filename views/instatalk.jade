@@ -1,0 +1,49 @@
+extends ./layout/basic
+
+block append stylesheets
+	link(rel='stylesheet', href='/stylesheets/instatalk.css')
+
+block content
+	div.container
+		div.page
+			div.top-div
+				div.brand-div
+					a.brand.hvr-grow(href='#') Instatalk.me
+				div.menu-div
+					a#roomname(href='#') hello
+					span  / 	
+					a#username(href='#') Usr1
+			div.input-div
+				input#inputMessage.form-control(type='text', placeholder='Type here...', aria-describedby='username')
+			div.message-out-div
+				div.message-inner-div
+					ul#messages.messages
+						- var n = 0;
+						while n < 100
+							li.message
+								span= n++
+
+			//- table.page-table
+			//- 	tbody
+			//- 		tr.message-tr
+			//- 			td
+			//- 				div.message-div
+			//- 					ul#messages.messages
+			//- 						- var n = 0;
+			//- 						while n < 100
+			//- 							li.message
+			//- 								span= n++
+			//- 		tr.input-tr
+			//- 			td
+			//- 				div
+			//- 					div.input-group
+			//- 						span#username.input-group-addon Usr1
+			//- 						input#inputMessage.form-control(type='text', placeholder='Type here...', aria-describedby='username')							
+			//- div.chatArea.well.well-lg
+			//- 	ul#messages.messages
+			//- input#inputMessage.inputMessage(placeholder='Type here...')
+
+block append scripts
+	script(src='/bower_components/crypto-js/crypto-js.js')
+	script(src='/socket.io/socket.io.js')
+	script(src='/javascripts/instatalk.js')

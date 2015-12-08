@@ -1,0 +1,114 @@
+/*
+ * Globals
+ */
+
+
+/* Links */
+
+a, a:focus, a:hover {
+    /*color: #fff;*/
+}
+
+/*
+ * Base structure
+ */
+
+html, body {
+    height: 100%;
+    background-color: white;
+    overflow: hidden;
+}
+body {
+    color: #333;
+    /*text-align: center;*/
+    /*text-shadow: 0 1px 3px rgba(0, 0, 0, .5);*/
+}
+
+/* Extra markup and styles for table-esque vertical and horizontal centering */
+
+.container {
+    height: 100%;
+    padding: 0px;
+}
+
+/*
+ * Page
+ */
+
+.page {
+    min-width: 320px;
+    max-width: 414px;
+    width: 100%;
+    min-height: 450px;
+    max-height: 736px;
+    height: 100%;
+    border: 1px solid #black;
+    background-color: #EEE;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+}
+.top-div {
+    z-index: 1001;
+    width: 100%;
+    position: absolute;
+    top: 0px;
+    height: 34px;
+    background-color: #d5d8dc;
+    padding: 7px;
+}
+.input-div {
+    z-index: 1001;
+    width: 100%;
+    position: absolute;
+    bottom: 0px;
+    height: 34px;
+}
+.message-out-div {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 2px;
+    padding: 36px 0px;
+}
+.message-inner-div {
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+}
+.messages {
+    font-size: 150%;
+    height: 100%;
+    margin: 0;
+    padding: 10px 20px 10px 20px;
+    list-style: none;
+    word-wrap: break-word;
+}
+.msg-input {
+    width: 100%;
+}
+.brand-div {
+    float: left;
+}
+.menu-div {
+    float: right;
+}
+.brand {
+    height: 34px;
+    font-size: 18px;
+    line-height: 20px;
+    margin-left: 10px;
+    color: #ee5109;
+}
+.brand:hover {
+    color: #ca4204;
+    text-decoration: none;
+    background-color: transparent;
+}
+#roomname {}
+#numUsers {
+    margin-left: 5px;
+}
+#username {
+    margin-right: 5px;
+}
