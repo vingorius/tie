@@ -7,21 +7,19 @@ block content
 	div.container
 		div.page
 			div.top-div
-				div.brand-div
-					a.brand.hvr-grow(href='#') Instatalk.me
+				div.url-div
+					a#url.url(href='') http://instatalk.me/
 				div.menu-div
-					a#roomname(href='#') hello
-					span  / 	
 					a#username(href='#') Usr1
 			div.input-div
 				input#inputMessage.form-control(type='text', placeholder='Type here...', aria-describedby='username')
 			div.message-out-div
 				div.message-inner-div
 					ul#messages.messages
-						- var n = 0;
-						while n < 100
-							li.message
-								span= n++
+						//- - var n = 0;
+						//- while n < 100
+						//- 	li.message
+						//- 		span= n++
 
 			//- table.page-table
 			//- 	tbody

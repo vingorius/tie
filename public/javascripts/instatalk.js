@@ -9,19 +9,21 @@ $(function() {
 
     // Initialize variables
     var $window = $(window);
-    var $ciperInput = $('#ciperInput'); // Input for ciper
+    // var $ciperInput = $('#ciperInput'); // Input for ciper
+    var $url = $('#url'); // URL + roomname
     var $messages = $('#messages'); // Messages area
     var $inputMessage = $('#inputMessage'); // Input message input box
+    var $username = $('#username'); // User Name
 
-    var $loginPage = $('.login.page'); // The login page
-    var $chatPage = $('.chat.page'); // The chatroom page
+    // var $loginPage = $('.login.page'); // The login page
+    // var $chatPage = $('.chat.page'); // The chatroom page
 
     // Prompt for setting a ciper
-    var username, ciper, room;
+    var username, ciper, room_url, room;
     var connected = false;
     var typing = false;
     var lastTypingTime;
-    var $currentInput = $ciperInput.focus();
+    // var $currentInput = $ciperInput.focus();
 
     // var socket = io();
     var server = window.location.origin;
@@ -32,6 +34,30 @@ $(function() {
         timeout: 20000,
     };
     var socket = io(server + '/chat', option);
+
+    start();
+    // after enter ciper, program start.
+    function start() {
+        // ciper = cleanInput($ciperInput.val().trim());
+        ciper = 'hello';
+
+        // If the ciper is valid
+        if (ciper) {
+            // Tell the server your ciper
+            room = window.location.pathname.substring(1);
+            room_url = server + '/' + room;
+            $url.text(room_url);
+            socket.emit('add user', room);
+        }
+    }
+
+    // String.prototype.startsWith Polyfill
+    if (!String.prototype.startsWith) {
+      String.prototype.startsWith = function(searchString, position) {
+        position = position || 0;
+        return this.indexOf(searchString, position) === position;
+      };
+    }
 
     function addParticipantsMessage(data) {
         var message = '';
@@ -51,22 +77,11 @@ $(function() {
         log('Now your name is \'' + username + '\'');
         $inputMessage.val('');
     }
-    // after enter ciper, program start.
-    function start() {
-        ciper = cleanInput($ciperInput.val().trim());
 
-        // If the ciper is valid
-        if (ciper) {
-            $loginPage.fadeOut();
-            $chatPage.show();
-            $loginPage.off('click');
-            $currentInput = $inputMessage.focus();
-
-            // Tell the server your ciper
-            room = window.location.pathname.substring(1);
-            console.log(room);
-            socket.emit('add user', room);
-        }
+    // Set User name
+    function setUsername(data) {
+        $username.text(data);
+        username = data;
     }
 
     // Sends a chat message
@@ -108,7 +123,8 @@ $(function() {
         //     .css('color', getusernameColor(data.username));
         var $tailSpan = $('<span class=\'tail\'>&nbsp;</span>');
         var $dateSpan = $('<span class=\'time\'/>');
-        $dateSpan.text(new Date().toLocaleTimeString());
+        // $dateSpan.text(new Date().toLocaleTimeString());
+        $dateSpan.text(getMessageTime());
         var $usernameDiv = $('<span/>');
         if (data.username !== username)
             $usernameDiv = $('<span class="username"/>')
@@ -132,7 +148,8 @@ $(function() {
 
         var $bubbleDiv = $('<div class="bubble"/>')
             .addClass(sideClass)
-            .append($tailSpan, $usernameDiv, $messageBodyDiv,$dateSpan);
+            .append($usernameDiv, $messageBodyDiv, $dateSpan);
+            // .append($tailSpan, $usernameDiv, $messageBodyDiv, $dateSpan);
 
         $messageDiv.append($bubbleDiv);
         // var $messageDiv = $('<li class="message bubble"/>')
@@ -163,6 +180,7 @@ $(function() {
     // options.fade - If the element should fade-in (default = true)
     // options.prepend - If the element should prepend
     //   all other messages (default = false)
+    // options.color - text color
     function addMessageElement(el, options) {
         var $el = $(el);
 
@@ -180,6 +198,9 @@ $(function() {
         // Apply options
         if (options.fade) {
             $el.hide().fadeIn(FADE_TIME);
+        }
+        if (options.color) {
+            $el.css('color', options.color);
         }
         if (options.prepend) {
             $messages.prepend($el);
@@ -233,17 +254,27 @@ $(function() {
         return COLORS[index];
     }
 
+    // Get Message Time (hh:mm:ss)
+    function getMessageTime() {
+        var d = new Date();
+        var t = d.getHours();
+        var m = d.getMinutes();
+        var s = d.getSeconds();
+        return t + ':' + m + ':' + s;
+    }
+
     // Keyboard events
     //
-    $ciperInput.keydown(function(key){
-        if(key.keyCode === 13)
-            start();
-    });
+    // $ciperInput.keydown(function(key){
+    //     if(key.keyCode === 13)
+    //         start();
+    // });
 
-    $inputMessage.keydown(function(key){
-        if(key.keyCode === 13){
+    $inputMessage.keydown(function(key) {
+        if (key.keyCode === 13) {
             var message = $inputMessage.val();
             message = cleanInput(message);
+            alert(message);
 
             if (message.startsWith('/')) {
                 runCommand(message);
@@ -262,9 +293,9 @@ $(function() {
     // Click events
 
     // Focus input when clicking anywhere on login page
-    $loginPage.click(function() {
-        $currentInput.focus();
-    });
+    // $loginPage.click(function() {
+    //     $currentInput.focus();
+    // });
 
     // Focus input when clicking on the message input's border
     $inputMessage.click(function() {
@@ -276,11 +307,12 @@ $(function() {
     // Whenever the server emits 'login', log the login message
     socket.on('login', function(data) {
         connected = true;
-        username = data.username;
+        setUsername(data.username);
         // Display the welcome message
-        var message = "Welcome to Socket.IO Chat – ";
+        var message = "The link was copied to clipboard, just paste it on e-mail, chat, SMS etc. to those you want to talk to.";
         log(message, {
-            prepend: true
+            prepend: true,
+            color: '#2980b9'
         });
         addParticipantsMessage(data);
     });
@@ -292,6 +324,8 @@ $(function() {
 
     // Whenever the server emits 'new name', update user name
     socket.on('new name', function(data) {
+        setUsername(data.username);
+
         removeChatTyping(data);
         log(data.message);
     });

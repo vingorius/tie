@@ -23,8 +23,8 @@ block content
 					p.lead
 						form#startForm(action='')
 							div.input-group
-								span#basic-addon3.input-group-addon http://instatalk.me/
-								input#basic-url.form-control(type='text', aria-describedby='basic-addon3', placeholder='room name')
+								span#server.input-group-addon http://instatalk.me/
+								input#roomname.form-control(type='text', aria-describedby='server', placeholder='room name')
 								span.input-group-btn
 									button#startBtn.btn.btn-default(type='submit') Start
 					p.lead
@@ -39,4 +39,5 @@ block content
 							a(href='https://twitter.com/mdo') @mdo
 							| .
 block append scripts
+	script(src='/javascripts/copytoclipboard.js')
 	script(src='/javascripts/index.js')
