@@ -34,7 +34,6 @@ $(function() {
         timeout: 20000,
     };
     var socket = io(server + '/chat', option);
-    console.log();
     start();
     // after enter ciper, program start.
     function start() {
