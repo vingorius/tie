@@ -26,7 +26,7 @@ $(function() {
     // var $currentInput = $ciperInput.focus();
 
     // var socket = io();
-    var server = window.location.origin;
+    var server = getServer();
     var option = {
         reconnection: true,
         reconnectionDelay: 1000,
@@ -34,7 +34,7 @@ $(function() {
         timeout: 20000,
     };
     var socket = io(server + '/chat', option);
-
+    console.log();
     start();
     // after enter ciper, program start.
     function start() {
@@ -53,10 +53,19 @@ $(function() {
 
     // String.prototype.startsWith Polyfill
     if (!String.prototype.startsWith) {
-      String.prototype.startsWith = function(searchString, position) {
-        position = position || 0;
-        return this.indexOf(searchString, position) === position;
-      };
+        String.prototype.startsWith = function(searchString, position) {
+            position = position || 0;
+            return this.indexOf(searchString, position) === position;
+        };
+    }
+
+    // For IE
+    function getServer() {
+        var sever = window.location.origin;
+        if (!server) {
+            server = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+        }
+        return server;
     }
 
     function addParticipantsMessage(data) {
@@ -149,7 +158,7 @@ $(function() {
         var $bubbleDiv = $('<div class="bubble"/>')
             .addClass(sideClass)
             .append($usernameDiv, $messageBodyDiv, $dateSpan);
-            // .append($tailSpan, $usernameDiv, $messageBodyDiv, $dateSpan);
+        // .append($tailSpan, $usernameDiv, $messageBodyDiv, $dateSpan);
 
         $messageDiv.append($bubbleDiv);
         // var $messageDiv = $('<li class="message bubble"/>')
