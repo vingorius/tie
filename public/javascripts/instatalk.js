@@ -28,12 +28,13 @@ $(function() {
     // var socket = io();
     var server = getServer();
     var option = {
+	forceNew: true,
         reconnection: true,
         reconnectionDelay: 1000,
         reconnectionDelayMax: 5000,
         timeout: 20000,
     };
-    var socket = io(server + '/chat', option);
+    var socket = io(server + '/chat', {'forceNew': true});
     start();
     // after enter ciper, program start.
     function start() {
