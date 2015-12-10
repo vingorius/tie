@@ -283,7 +283,6 @@ $(function() {
         if (key.keyCode === 13) {
             var message = $inputMessage.val();
             message = cleanInput(message);
-            alert(message);
 
             if (message.startsWith('/')) {
                 runCommand(message);
