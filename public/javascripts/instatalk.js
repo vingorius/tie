@@ -9,7 +9,8 @@ $(function() {
 
     // Initialize variables
     var $window = $(window);
-    // var $ciperInput = $('#ciperInput'); // Input for ciper
+    var $ciperModal = $('#ciperModal'); // Ciper Modal Dialog
+    var $ciperInput = $('#ciperInput'); // Input for ciper
     var $url = $('#url'); // URL + roomname
     var $messages = $('#messages'); // Messages area
     var $inputMessage = $('#inputMessage'); // Input message input box
@@ -35,10 +36,14 @@ $(function() {
         timeout: 20000,
     };
     var socket = io(server + '/chat', {'forceNew': true});
-    start();
+
+    // TODO 암호 입력을 어떻게 할 것인가?
+    $ciperModal.modal('show');
+    ciper = cleanInput($ciperInput.val().trim());
+
+    // start();
     // after enter ciper, program start.
     function start() {
-        // ciper = cleanInput($ciperInput.val().trim());
         ciper = 'hello';
 
         // If the ciper is valid

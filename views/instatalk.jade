@@ -4,6 +4,18 @@ block append stylesheets
 	link(rel='stylesheet', href='/stylesheets/instatalk.css')
 
 block content
+	div#ciperModal.modal.fade(tabindex='-1', role='dialog')
+		div.modal-dialog
+			div.modal-content
+				div.modal-header
+					button.close(type='button', data-dismiss='modal', aria-label='Close')
+						span(aria-hidden='true') ×
+					h4.modal-title 미리 약속한 암호를 넣으시오.
+				div.modal-body(style={'text-align':'center'})
+					input#ciperInput(type='password')
+				div.modal-footer
+					button.btn.btn-default(type='button', data-dismiss='modal') Close
+					//- button.btn.btn-primary(type='button') Save changes
 	div.container
 		div.page
 			div.top-div
@@ -42,6 +54,7 @@ block content
 			//- input#inputMessage.inputMessage(placeholder='Type here...')
 
 block append scripts
+	script(src='/bower_components/js-cookie/src/js.cookie.js')
 	script(src='/bower_components/crypto-js/crypto-js.js')
 	//- nginx proxy 시...socket.io/socket.io.js는 되다 안되다 한다. 원인을 몰라 일단 CDN으로 연결하였다. 
 	//- CND 사용은 버전을 정확히 맞춰줘야 한다.
