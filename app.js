@@ -7,8 +7,18 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var client = require('./routes/client');
+var i18n = require('i18n');
 
 var app = express();
+
+// i18n config, 위치가 중요하다.
+i18n.configure({
+  locales: ['ko', 'en'],
+  cookie: 'locale',
+  defaultLocale: 'ko',
+  directory: __dirname + '/locales'
+});
+app.use(i18n.init);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
