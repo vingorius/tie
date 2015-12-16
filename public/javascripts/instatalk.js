@@ -291,9 +291,18 @@ $(function() {
         if (connected) {
             var newname = $userInput.val();
             newname = cleanInput(newname);
-            changeName(newname);
+            if(newname && newname.length > 1){
+                changeName(newname);
+            }
         } else {
+            log('Not connected...Please reload.');
+        }
+    });
 
+    $userInput.keydown(function(key) {
+        if (key.keyCode === 13) {
+            $userModal.modal('hide');
+            $userModalOKButton.trigger('click');
         }
     });
 
@@ -304,7 +313,7 @@ $(function() {
     $ciperInput.keydown(function(key) {
         if (key.keyCode === 13) {
             $ciperModal.modal('hide');
-            start();
+            $ciperModalOKButton.trigger('click');
         }
     });
 
