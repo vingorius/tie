@@ -18,9 +18,9 @@ html, body {
     background-color: #333;
 }
 body {
-    /*color: #fff;
-    text-align: center;*/
-    /*text-shadow: 0 1px 3px rgba(0, 0, 0, .5);*/
+    color: #fff;
+    text-align: center;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, .5);
 }
 
 /* Extra markup and styles for table-esque vertical and horizontal centering */
@@ -59,6 +59,7 @@ body {
     margin-top: 10px;
     margin-bottom: 10px;
     color: #DF5414;
+    font-weight: bold;
 }
 .masthead-nav > li {
     display: inline-block;
@@ -109,6 +110,7 @@ body {
     max-width: 500px;
     margin-left: auto;
     margin-right: auto;
+    text-shadow: none;
 }
 
 /*

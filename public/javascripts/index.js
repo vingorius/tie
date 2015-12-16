@@ -13,7 +13,7 @@ $(document).ready(function() {
 
         event.preventDefault();
         if (roomname.length > 0) {
-            CopyToClipboard($server.text() + roomname, true);
+            // CopyToClipboard($server.text() + roomname, true);
             this.action = roomname;
             this.submit();
         } else {

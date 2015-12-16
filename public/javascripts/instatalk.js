@@ -6,16 +6,23 @@ $(function() {
         '#58dc00', '#287b00', '#a8f07a', '#4ae8c4',
         '#3b88eb', '#3824aa', '#a700ff', '#d300e7'
     ];
+    var COOKIE_USERNAME_KEY = 'username';
 
     // Initialize variables
     var $window = $(window);
     var $ciperModal = $('#ciperModal'); // Ciper Modal Dialog
     var $ciperInput = $('#ciperInput'); // Input for ciper
-    var $url = $('#url'); // URL + roomname
+    var $ciperModalOKButton = $('#ciperModalOKButton'); // Ciper Modal OK Button
+    var $userInput = $('#userInput'); // Input for user name
+    var $userModalOKButton = $('#userModalOKButton'); // User Modal OK Button
+    var $roomurl = $('#roomurl'); // URL + roomname
     var $messages = $('#messages'); // Messages area
+    var $startMessage = $('#startMessage'); // show when connect to server succesfully.
     var $inputMessage = $('#inputMessage'); // Input message input box
+    var $status = $('#status'); // Status
     var $username = $('#username'); // User Name
-
+    var $copyButton = $('#copyButton');
+    var $sendButton = $('#sendButton'); // Input Message Send Button
     // var $loginPage = $('.login.page'); // The login page
     // var $chatPage = $('.chat.page'); // The chatroom page
 
@@ -29,40 +36,40 @@ $(function() {
     // var socket = io();
     var server = getServer();
     var option = {
-	forceNew: true,
+        forceNew: true,
         reconnection: true,
         reconnectionDelay: 1000,
         reconnectionDelayMax: 5000,
         timeout: 20000,
     };
-    var socket = io(server + '/chat', {'forceNew': true});
+    var socket = io(server + '/chat', {
+        'forceNew': true
+    });
 
-    // TODO 암호 입력을 어떻게 할 것인가?
+    // Init Copy to Clipboard Button
+    // $copyButton.tooltip();
+    var clipboard = new Clipboard('#copyButton');
+
+    clipboard.on('success', function(e) {
+        $copyButton.tooltip('show');
+        e.clearSelection();
+    });
+
+
+    // Focus on ciperInput
+    $ciperModal.on('shown.bs.modal', function() {
+        $ciperInput.focus();
+    });
+
     $ciperModal.modal('show');
-    ciper = cleanInput($ciperInput.val().trim());
-
-    // start();
-    // after enter ciper, program start.
-    function start() {
-        ciper = 'hello';
-
-        // If the ciper is valid
-        if (ciper) {
-            // Tell the server your ciper
-            room = window.location.pathname.substring(1);
-            room_url = server + '/' + room;
-            $url.text(room_url);
-            socket.emit('add user', room);
-        }
-    }
 
     // String.prototype.startsWith Polyfill
-    if (!String.prototype.startsWith) {
-        String.prototype.startsWith = function(searchString, position) {
-            position = position || 0;
-            return this.indexOf(searchString, position) === position;
-        };
-    }
+    // if (!String.prototype.startsWith) {
+    //     String.prototype.startsWith = function(searchString, position) {
+    //         position = position || 0;
+    //         return this.indexOf(searchString, position) === position;
+    //     };
+    // }
 
     // For IE
     function getServer() {
@@ -84,11 +91,10 @@ $(function() {
     }
 
     // run Command, change username
-    function runCommand(cmd) {
-        var newname = cmd.substring(1);
-        username = newname;
-        socket.emit('new name', username);
-        log('Now your name is \'' + username + '\'');
+    function changeName(newname) {
+        setUsername(newname);
+        socket.emit('new name', newname);
+        log('Now your name is \'' + newname + '\'');
         $inputMessage.val('');
     }
 
@@ -96,8 +102,12 @@ $(function() {
     function setUsername(data) {
         $username.text(data);
         username = data;
+        Cookies.set(COOKIE_USERNAME_KEY, data);
     }
-
+    // Get User name from cookie.
+    function getUsername(){
+        return Cookies.get(COOKIE_USERNAME_KEY);
+    }
     // Sends a chat message
     function sendMessage(message) {
         // var message = $inputMessage.val();
@@ -277,25 +287,49 @@ $(function() {
         return t + ':' + m + ':' + s;
     }
 
+    $userModalOKButton.click(function() {
+        if (connected) {
+            var newname = $userInput.val();
+            newname = cleanInput(newname);
+            changeName(newname);
+        } else {
+
+        }
+    });
+
+    $ciperModalOKButton.click(function() {
+        start();
+    });
+
+    $ciperInput.keydown(function(key) {
+        if (key.keyCode === 13) {
+            $ciperModal.modal('hide');
+            start();
+        }
+    });
+
+    // after enter ciper, program start.
+    function start() {
+        ciper = cleanInput($ciperInput.val().trim());
+        // If the ciper is valid
+        if (ciper) {
+            // Tell the server your ciper
+            room = window.location.pathname.substring(1);
+            room_url = server + '/' + room;
+            $roomurl.val(room_url);
+            socket.emit('add user', room,getUsername());
+        }
+    }
+
     // Keyboard events
     //
     // $ciperInput.keydown(function(key){
     //     if(key.keyCode === 13)
     //         start();
     // });
-
     $inputMessage.keydown(function(key) {
         if (key.keyCode === 13) {
-            var message = $inputMessage.val();
-            message = cleanInput(message);
-
-            if (message.startsWith('/')) {
-                runCommand(message);
-            } else {
-                sendMessage(message);
-            }
-            socket.emit('stop typing');
-            typing = false;
+            $sendButton.trigger('click');
         }
     });
 
@@ -304,6 +338,13 @@ $(function() {
     });
 
     // Click events
+    $sendButton.click(function() {
+        var message = $inputMessage.val();
+        message = cleanInput(message);
+        sendMessage(message);
+        socket.emit('stop typing');
+        typing = false;
+    });
 
     // Focus input when clicking anywhere on login page
     // $loginPage.click(function() {
@@ -322,11 +363,7 @@ $(function() {
         connected = true;
         setUsername(data.username);
         // Display the welcome message
-        var message = "The link was copied to clipboard, just paste it on e-mail, chat, SMS etc. to those you want to talk to.";
-        log(message, {
-            prepend: true,
-            color: '#2980b9'
-        });
+        $startMessage.show();
         addParticipantsMessage(data);
     });
 

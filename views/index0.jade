@@ -9,7 +9,7 @@ block content
 			div.cover-container
 				div.masthead.clearfix
 					div.inner
-						h1.masthead-brand #{__('index.instatalk')}
+						h3.masthead-brand #{__('index.instatalk')}
 						//- nav
 						//- 	ul.nav.masthead-nav
 						//- 		li.active
@@ -21,10 +21,6 @@ block content
 				div.inner.cover
 					h1.cover-heading #{__('index.cover-heading')}
 					p.lead
-						| instatalk은 방 이름만 공유하여 채팅할 수 있습니다. 회원 가입, 로그인과 같은 절차는 필요 없습니다.
-						| 미리 약속한 암호가 있으면 모든 대화 내용은 암호화하여 전송하므로 안전합니다. 
-						| 서버는 연결만 할 뿐 그 어떤 대화 내용도 저장하지 않습니다.
-
 						form#startForm(action='')
 							div.input-group
 								span#server.input-group-addon http://instatalk.me/
@@ -43,5 +39,5 @@ block content
 							a(href='https://twitter.com/mdo') @mdo
 							| .
 block append scripts
-	//- script(src='/javascripts/copytoclipboard.js')
+	script(src='/javascripts/copytoclipboard.js')
 	script(src='/javascripts/index.js')

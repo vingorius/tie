@@ -11,7 +11,7 @@ html, body {
     background-color: white;
     overflow: hidden;
     margin: 0;
-    padding: 0;    
+    padding: 0;
 }
 html, input {
     font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
@@ -118,12 +118,19 @@ body {
     text-decoration: none;
     background-color: transparent;
 }
+.modal-dialog {
+    width: 300px;
+    margin: 10px auto;
+}
 #roomname {}
 #numUsers {
     margin-left: 5px;
 }
 #username {
     margin-right: 5px;
+}
+#startMessage {
+    display: none;
 }
 .messages {
     height: 100%;

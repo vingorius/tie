@@ -32,7 +32,7 @@ exports.createServer = function(http) {
         });
 
         // when the client emits 'add user', this listens and executes
-        socket.on('add user', function(roomname) {
+        socket.on('add user', function(roomname, username) {
             socket.auth = true;
 
             socket.roomname = roomname;
@@ -42,7 +42,9 @@ exports.createServer = function(http) {
             nameUsers[socket.roomname] = ++nameUsers[socket.roomname] || 1;
 
             var no = numUsers[socket.roomname];
-            var username = 'Usr' + nameUsers[socket.roomname];
+            if (!username) {
+                username = 'Usr' + nameUsers[socket.roomname];
+            }
             console.log('add user:%s roomname:%s, %d users', username, roomname, no);
             // we store the username in the socket session for this client
             // var username = 'Guest' + numUsers[socket.roomname];
