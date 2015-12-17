@@ -17,7 +17,7 @@ html, input {
     font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 body {
-    color: #333;
+    color: #222;
     /*text-align: center;*/
     /*text-shadow: 0 1px 3px rgba(0, 0, 0, .5);*/
 }
@@ -55,8 +55,8 @@ body {
     min-height: 450px;
     max-height: 736px;
     height: 100%;
-    border: 1px solid #black;
-    background-color: #EEE;
+    border: 1px solid #EEE;
+    background-color: rgb(250, 250, 250);
     margin-left: auto;
     margin-right: auto;
     position: relative;
@@ -66,8 +66,8 @@ body {
     width: 100%;
     position: absolute;
     top: 0px;
-    height: 34px;
-    background-color: #333;
+    height: 36px;
+    background-color: #D8D8D8;
     padding: 7px;
 }
 .input-div {
@@ -81,7 +81,7 @@ body {
     height: 100%;
     width: 100%;
     position: absolute;
-    top: 2px;
+    /*top: 2px;*/
     padding: 36px 0px;
 }
 .message-inner-div {
@@ -90,7 +90,7 @@ body {
     overflow: auto;
 }
 .messages {
-    font-size: 100%;
+    font-size: 90%;
     height: 100%;
     margin: 0;
     padding: 10px 20px 10px 20px;
@@ -127,6 +127,7 @@ body {
     margin-left: 5px;
 }
 #username {
+    font-weight: 900;
     margin-right: 5px;
 }
 #startMessage {
@@ -136,7 +137,7 @@ body {
     height: 100%;
     margin: 0;
     overflow-y: scroll;
-    padding: 10px 20px 10px 20px;
+    padding: 10px;
 }
 .message.typing .messageBody {
     color: gray;
@@ -153,7 +154,7 @@ body {
     float: left;
     font-weight: 700;
     overflow: hidden;
-    padding-right: 15px;
+    padding-right: 10px;
     text-align: right;
 }
 
@@ -182,12 +183,12 @@ body {
     box-shadow: 0px 1px 6px #B2B2B2;
     /*display: block;*/
     display: inline-block;
-    padding: 4px 6px;
+    padding: 8px 8px;
     /*margin: 1em 18px;*/
     margin: 4px 4px;
     position: relative;
     vertical-align: top;
-    max-width: 60%;
+    max-width: 65%;
 }
 .tail {
     position: absolute;
@@ -196,14 +197,14 @@ body {
     overflow: hidden;
 }
 .time {
-    font-size: 70%;
+    font-size: 80%;
     position: absolute;
     height: 18px;
     /*width: 18px;*/
     overflow: hidden;
 }
 .bubble.left {
-    background-color: #ffebee;
+    background-color: #FEFEFE;
     text-align: left;
 }
 .bubble.left .tail {
@@ -211,7 +212,7 @@ body {
     left: -18px;
 }
 .bubble.left .time {
-    bottom: -4px;
+    bottom: -8px;
     right: -45px;
 }
 .bubble.left .tail::before {
@@ -226,7 +227,7 @@ body {
 
 .tail::before {
     border: 1px solid #BBB;
-    background-color: #F2F2F2;
+    background-color: rgb(255, 238, 88);
     box-shadow: 0px 1px 6px #B2B2B2;
     content: " ";
     display: block;
@@ -236,7 +237,7 @@ body {
     width: 12px;
 }
 .bubble.right {
-    background-color: #fcf3cf;
+    background-color: #ffee58;
     text-align: right;
 }
 .bubble.right .tail {
@@ -244,7 +245,7 @@ body {
     right: -18px;
 }
 .bubble.right .time {
-    bottom: -4px;
+    bottom: -8px;
     left: -45px;
 }
 .bubble.right .tail::before {

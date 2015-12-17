@@ -73,7 +73,7 @@ exports.createServer = function(http) {
             data = {
                 'userid': socket.id,
                 'username': socket.username,
-                'message': socket.username + ' 님의 이름이 ' + newname + ' 로 바뀌었습니다.'
+                'message': socket.username + '님 이름이 ' + newname + '(으)로 바뀌었습니다.'
             };
             //delete old user
             // delete usernames[socket.username];

@@ -2,6 +2,11 @@ $(function() {
     var FADE_TIME = 150; // ms
     var TYPING_TIMER_LENGTH = 400; // ms
     var COLORS = [
+        '#e21400', '#91580f', '#ba7f04', '#cd7300',
+        '#43a700', '#287b00', '#59e500', '#00c498',
+        '#277dec', '#3824aa', '#68019e', '#880494'
+    ];
+    var COLORS2 = [
         '#e21400', '#91580f', '#f8a700', '#f78b00',
         '#58dc00', '#287b00', '#a8f07a', '#4ae8c4',
         '#3b88eb', '#3824aa', '#a700ff', '#d300e7'
@@ -77,7 +82,7 @@ $(function() {
     }
 
     function addParticipantsMessage(data) {
-        var message = data.numUsers + ' 명이 이 방에 있습니다.';
+        var message = '현재 ' + data.numUsers + '명이 방에 있습니다.';
         // if (data.numUsers === 1) {
         //     message += "there's 1 participant";
         // } else {
@@ -91,7 +96,7 @@ $(function() {
     function changeName(newname) {
         setUsername(newname);
         socket.emit('new name', newname);
-        log(newname + ' 으로 이름이 바뀌었습니다.');
+        log(newname + ' (으)로 이름을 바뀌었습니다.');
         // $inputMessage.val('');
     }
 
