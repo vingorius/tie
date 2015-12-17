@@ -10,9 +10,10 @@ $(function() {
 
     // Initialize variables
     var $window = $(window);
-    var $ciperModal = $('#ciperModal'); // Ciper Modal Dialog
+    var $ciperModal = $('#ciperModal'); // Ciper Input Modal Dialog
     var $ciperInput = $('#ciperInput'); // Input for ciper
     var $ciperModalOKButton = $('#ciperModalOKButton'); // Ciper Modal OK Button
+    var $userModal = $('#userModal'); // User Name Input Modal Dialog
     var $userInput = $('#userInput'); // Input for user name
     var $userModalOKButton = $('#userModalOKButton'); // User Modal OK Button
     var $roomurl = $('#roomurl'); // URL + roomname
@@ -27,7 +28,7 @@ $(function() {
     // var $chatPage = $('.chat.page'); // The chatroom page
 
     // Prompt for setting a ciper
-    var username, ciper, room_url, room;
+    var userid, username, ciper, room_url, room;
     var connected = false;
     var typing = false;
     var lastTypingTime;
@@ -56,11 +57,6 @@ $(function() {
     });
 
 
-    // Focus on ciperInput
-    $ciperModal.on('shown.bs.modal', function() {
-        $ciperInput.focus();
-    });
-
     $ciperModal.modal('show');
 
     // String.prototype.startsWith Polyfill
@@ -81,12 +77,13 @@ $(function() {
     }
 
     function addParticipantsMessage(data) {
-        var message = '';
-        if (data.numUsers === 1) {
-            message += "there's 1 participant";
-        } else {
-            message += "there are " + data.numUsers + " participants";
-        }
+        var message = data.numUsers + ' 명이 이 방에 있습니다.';
+        // if (data.numUsers === 1) {
+        //     message += "there's 1 participant";
+        // } else {
+        //     message += "there are " + data.numUsers + " participants";
+        // }
+
         log(message);
     }
 
@@ -94,8 +91,8 @@ $(function() {
     function changeName(newname) {
         setUsername(newname);
         socket.emit('new name', newname);
-        log('Now your name is \'' + newname + '\'');
-        $inputMessage.val('');
+        log(newname + ' 으로 이름이 바뀌었습니다.');
+        // $inputMessage.val('');
     }
 
     // Set User name
@@ -105,7 +102,7 @@ $(function() {
         Cookies.set(COOKIE_USERNAME_KEY, data);
     }
     // Get User name from cookie.
-    function getUsername(){
+    function getUsername() {
         return Cookies.get(COOKIE_USERNAME_KEY);
     }
     // Sends a chat message
@@ -117,8 +114,9 @@ $(function() {
         if (message && connected) {
             $inputMessage.val('');
             addChatMessage({
-                username: username,
-                message: message
+                'userid': userid,
+                'username': username,
+                'message': message
             });
             // tell server to execute 'new message' and send along one parameter
             socket.emit('new message', message);
@@ -150,18 +148,18 @@ $(function() {
         // $dateSpan.text(new Date().toLocaleTimeString());
         $dateSpan.text(getMessageTime());
         var $usernameDiv = $('<span/>');
-        if (data.username !== username)
+        if (data.userid !== userid)
             $usernameDiv = $('<span class="username"/>')
             .text(data.username)
-            .css('color', getUsernameColor(data.username));
+            .css('color', getUseridColor(data.userid));
 
         var $messageBodyDiv = $('<span class="messageBody">')
             .text(data.message);
 
         var typingClass = data.typing ? 'typing' : '';
         // var typingClass = data.typing ? 'typing' :
-        var msgClass = (data.username === username) ? 'text-right' : 'text-left';
-        var sideClass = (data.username === username) ? 'right' : 'left';
+        var msgClass = (data.userid === userid) ? 'text-right' : 'text-left';
+        var sideClass = (data.userid === userid) ? 'right' : 'left';
         // var dateClass = (data.username === username) ? 'leftdate' : 'rightdate';
         // $dateSpan.addClass(dateClass);
 
@@ -188,7 +186,7 @@ $(function() {
     // Adds the visual chat typing message
     function addChatTyping(data) {
         data.typing = true;
-        data.message = 'is typing';
+        data.message = '님 입력중.';
         addChatMessage(data);
     }
 
@@ -278,6 +276,17 @@ $(function() {
         return COLORS[index];
     }
 
+    function getUseridColor(userid) {
+        // Compute hash code
+        var hash = 7;
+        for (var i = 0; i < userid.length; i++) {
+            hash = userid.charCodeAt(i) + (hash << 5) - hash;
+        }
+        // Calculate color
+        var index = Math.abs(hash % COLORS.length);
+        return COLORS[index];
+    }
+
     // Get Message Time (hh:mm:ss)
     function getMessageTime() {
         var d = new Date();
@@ -287,24 +296,50 @@ $(function() {
         return t + ':' + m + ':' + s;
     }
 
+    //data-target="#userModal"로 Modal을 띄우면, userInput.focus()가 안먹더라..이유는 아몰랑.
+    $username.click(function(){
+        $userModal.modal('show');
+    });
+
+    // When UserModal show, set userInput default as current username.
+    $userModal.on('shown.bs.modal', function (event) {
+        $userInput.text(username);
+        $userInput.focus();
+    });
+
+    // When hidden, change focus to inputmessage
+    $userModal.on('hidden.bs.modal', function (event) {
+        $inputMessage.focus();
+    });
+
     $userModalOKButton.click(function() {
         if (connected) {
             var newname = $userInput.val();
             newname = cleanInput(newname);
-            if(newname && newname.length > 1){
+            if (newname && newname.length > 1) {
                 changeName(newname);
             }
         } else {
-            log('Not connected...Please reload.');
+            log('연결이 끊어졌습니다. F5를 클릭하여 새로고침해보십시오.');
         }
     });
 
     $userInput.keydown(function(key) {
         if (key.keyCode === 13) {
-            $userModal.modal('hide');
             $userModalOKButton.trigger('click');
         }
     });
+
+    // Focus on ciperInput
+    $ciperModal.on('shown.bs.modal', function() {
+        $ciperInput.focus();
+    });
+
+    // When hidden, change focus to inputmessage
+    $ciperModal.on('hidden.bs.modal', function() {
+        $inputMessage.focus();
+    });
+
 
     $ciperModalOKButton.click(function() {
         start();
@@ -312,7 +347,6 @@ $(function() {
 
     $ciperInput.keydown(function(key) {
         if (key.keyCode === 13) {
-            $ciperModal.modal('hide');
             $ciperModalOKButton.trigger('click');
         }
     });
@@ -326,7 +360,7 @@ $(function() {
             room = window.location.pathname.substring(1);
             room_url = server + '/' + room;
             $roomurl.val(room_url);
-            socket.emit('add user', room,getUsername());
+            socket.emit('add user', room, getUsername());
         }
     }
 
@@ -368,8 +402,11 @@ $(function() {
     // Socket events
 
     // Whenever the server emits 'login', log the login message
+    // 1. set userid
+    // 2. set username
     socket.on('login', function(data) {
         connected = true;
+        userid = data.userid;
         setUsername(data.username);
         // Display the welcome message
         $startMessage.show();
@@ -383,20 +420,21 @@ $(function() {
 
     // Whenever the server emits 'new name', update user name
     socket.on('new name', function(data) {
-        setUsername(data.username);
+        // setUsername(data.username);
 
         removeChatTyping(data);
         log(data.message);
     });
+
     // Whenever the server emits 'user joined', log it in the chat body
     socket.on('user joined', function(data) {
-        log(data.username + ' joined');
+        log(data.username + ' 님 입장.');
         addParticipantsMessage(data);
     });
 
     // Whenever the server emits 'user left', log it in the chat body
     socket.on('user left', function(data) {
-        log(data.username + ' left');
+        log(data.username + ' 님 퇴장.');
         addParticipantsMessage(data);
         removeChatTyping(data);
     });

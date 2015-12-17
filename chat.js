@@ -26,6 +26,7 @@ exports.createServer = function(http) {
             // socket.chkAuth();
             // we tell the client to execute 'new message'
             socket.to(socket.roomname).broadcast.emit('new message', {
+                'userid': socket.id,
                 'username': socket.username,
                 'message': data
             });
@@ -54,11 +55,13 @@ exports.createServer = function(http) {
             // usernames[username] = username;
 
             socket.emit('login', {
+                'userid': socket.id,
                 'username': socket.username,
                 'numUsers': no,
             });
             // echo globally (all clients) that a person has connected
             socket.to(socket.roomname).broadcast.emit('user joined', {
+                'userid': socket.id,
                 'username': socket.username,
                 'numUsers': no,
             });
@@ -68,8 +71,9 @@ exports.createServer = function(http) {
         socket.on('new name', function(newname) {
             // socket.chkAuth();
             data = {
-                username: socket.username,
-                message: socket.username + ' changed his name to ' + newname
+                'userid': socket.id,
+                'username': socket.username,
+                'message': socket.username + ' 님의 이름이 ' + newname + ' 로 바뀌었습니다.'
             };
             //delete old user
             // delete usernames[socket.username];
@@ -84,6 +88,7 @@ exports.createServer = function(http) {
         socket.on('typing', function() {
             // socket.chkAuth();
             socket.to(socket.roomname).broadcast.emit('typing', {
+                'userid': socket.id,
                 'username': socket.username
             });
         });
@@ -92,6 +97,7 @@ exports.createServer = function(http) {
         socket.on('stop typing', function() {
             // socket.chkAuth();
             socket.to(socket.roomname).broadcast.emit('stop typing', {
+                'userid': socket.id,
                 'username': socket.username
             });
         });
@@ -105,6 +111,7 @@ exports.createServer = function(http) {
                 var no = numUsers[socket.roomname];
                 // echo globally that this client has left
                 socket.to(socket.roomname).broadcast.emit('user left', {
+                    'userid': socket.id,
                     'username': socket.username,
                     'numUsers': no
                 });

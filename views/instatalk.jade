@@ -38,13 +38,14 @@ block content
 				div.menu-div
 					ul.list-inline
 						li
-							a#username(href='', data-toggle="modal",data-target="#userModal") Usr1
+							//- a#username(href='', data-toggle="modal",data-target="#userModal") Usr1
+							a#username(href='', data-toggle="modal") Usr1
 						li
 							span#status.glyphicon.glyphicon-cloud(style={'color':'white'})
 
 			div.input-div
 				div.input-group
-					input#inputMessage.form-control(type='text', placeholder='Type here...', aria-describedby='username')
+					input#inputMessage.form-control(type='text', placeholder='Type here...')
 					span.input-group-btn
 						button#sendButton.btn.btn-default(type='button') Send
 			div.message-out-div
@@ -60,32 +61,11 @@ block content
 									input#roomurl.form-control.input-sm(type='text',value='',placeholder='room url')
 									span.input-group-btn
 										button#copyButton.btn.btn-default.btn-sm(type='button',data-clipboard-target='#roomurl',data-toggle="tooltip" data-placement="top",title="Copied") Copy
-										//- button#copyButton.btn.btn-primary.btn-sm(data-clipboard-target='#roomurl')
-										//- 	img(src='/images/clippy.svg', alt='Copy to clipboard',style={'width':'13px'})
-										//- table.page-table
-										//- 	tbody
-										//- 		tr.message-tr
-										//- 			td
-										//- 				div.message-div
-										//- 					ul#messages.messages
-										//- 						- var n = 0;
-										//- 						while n < 100
-										//- 							li.message
-										//- 								span= n++
-										//- 		tr.input-tr
-										//- 			td
-										//- 				div
-										//- 					div.input-group
-										//- 						span#username.input-group-addon Usr1
-										//- 						input#inputMessage.form-control(type='text', placeholder='Type here...', aria-describedby='username')							
-										//- div.chatArea.well.well-lg
-										//- 	ul#messages.messages
-										//- input#inputMessage.inputMessage(placeholder='Type here...')
 
 block append scripts
 	script(src='/bower_components/js-cookie/src/js.cookie.js')
 	script(src='/bower_components/crypto-js/crypto-js.js')
-	script(src='/bower_components/clipboard/dist/clipboard.min.js')
+	script(src='/bower_components/clipboard/dist/clipboard.js')
 	//- nginx proxy 시...socket.io/socket.io.js는 되다 안되다 한다. 원인을 몰라 일단 CDN으로 연결하였다. 
 	//- CND 사용은 버전을 정확히 맞춰줘야 한다.
 	//- script(src='/socket.io/socket.io.js')
