@@ -237,8 +237,8 @@ body {
     width: 12px;
 }
 .bubble.right {
-    background-color: #ffee58;
-    text-align: right;
+    background-color: #BEFFFA;;
+    text-align: left;
 }
 .bubble.right .tail {
     top: 12px;

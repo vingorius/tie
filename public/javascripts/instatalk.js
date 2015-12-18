@@ -160,6 +160,12 @@ $(function() {
 
         var $messageBodyDiv = $('<span class="messageBody">')
             .text(data.message);
+        // url to link
+        $messageBodyDiv.linkify({
+            handleLinks: function(links) {
+                links.attr('target', '_blank');
+            }
+        });
 
         var typingClass = data.typing ? 'typing' : '';
         // var typingClass = data.typing ? 'typing' :
@@ -302,18 +308,18 @@ $(function() {
     }
 
     //data-target="#userModal"로 Modal을 띄우면, userInput.focus()가 안먹더라..이유는 아몰랑.
-    $username.click(function(){
+    $username.click(function() {
         $userModal.modal('show');
     });
 
     // When UserModal show, set userInput default as current username.
-    $userModal.on('shown.bs.modal', function (event) {
+    $userModal.on('shown.bs.modal', function(event) {
         $userInput.text(username);
         $userInput.focus();
     });
 
     // When hidden, change focus to inputmessage
-    $userModal.on('hidden.bs.modal', function (event) {
+    $userModal.on('hidden.bs.modal', function(event) {
         $inputMessage.focus();
     });
 
