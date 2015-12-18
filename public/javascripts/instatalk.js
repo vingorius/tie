@@ -6,12 +6,15 @@ $(function() {
         '#43a700', '#287b00', '#59e500', '#00c498',
         '#277dec', '#3824aa', '#68019e', '#880494'
     ];
-    var COLORS2 = [
-        '#e21400', '#91580f', '#f8a700', '#f78b00',
-        '#58dc00', '#287b00', '#a8f07a', '#4ae8c4',
-        '#3b88eb', '#3824aa', '#a700ff', '#d300e7'
-    ];
+    // var COLORS = [
+    //     '#e21400', '#91580f', '#f8a700', '#f78b00',
+    //     '#58dc00', '#287b00', '#a8f07a', '#4ae8c4',
+    //     '#3b88eb', '#3824aa', '#a700ff', '#d300e7'
+    // ];
     var COOKIE_USERNAME_KEY = 'username';
+    var LOG_URGENT = {
+        'color': '#A94442'
+    };
 
     // Initialize variables
     var $window = $(window);
@@ -29,25 +32,22 @@ $(function() {
     var $username = $('#username'); // User Name
     var $copyButton = $('#copyButton');
     var $sendButton = $('#sendButton'); // Input Message Send Button
-    // var $loginPage = $('.login.page'); // The login page
-    // var $chatPage = $('.chat.page'); // The chatroom page
 
     // Prompt for setting a ciper
     var userid, username, ciper, room_url, room;
     var connected = false;
     var typing = false;
     var lastTypingTime;
-    // var $currentInput = $ciperInput.focus();
 
-    // var socket = io();
     var server = getServer();
-    var option = {
-        forceNew: true,
-        reconnection: true,
-        reconnectionDelay: 1000,
-        reconnectionDelayMax: 5000,
-        timeout: 20000,
-    };
+    // var option = {
+    //     forceNew: true,
+    //     reconnection: true,
+    //     reconnectionDelay: 1000,
+    //     reconnectionDelayMax: 5000,
+    //     timeout: 20000,
+    // };
+
     var socket = io(server + '/chat', {
         'forceNew': true
     });
@@ -61,8 +61,10 @@ $(function() {
         e.clearSelection();
     });
 
-
+    // 처음 들어오면 암호를 묻는 모달창을 띄운다.
     $ciperModal.modal('show');
+    //청소
+    $inputMessage.val('');
 
     // String.prototype.startsWith Polyfill
     // if (!String.prototype.startsWith) {
@@ -71,6 +73,13 @@ $(function() {
     //         return this.indexOf(searchString, position) === position;
     //     };
     // }
+
+    // Padding Left with '0', ex) 1 -> 01
+    function padleft(no) {
+        var str = "" + no;
+        var pad = "00";
+        return pad.substring(0, pad.length - str.length) + str;
+    }
 
     // For IE
     function getServer() {
@@ -82,14 +91,7 @@ $(function() {
     }
 
     function addParticipantsMessage(data) {
-        var message = '현재 ' + data.numUsers + '명이 방에 있습니다.';
-        // if (data.numUsers === 1) {
-        //     message += "there's 1 participant";
-        // } else {
-        //     message += "there are " + data.numUsers + " participants";
-        // }
-
-        log(message);
+        log('현재 ' + data.numUsers + '명이 방에 있습니다.');
     }
 
     // run Command, change username
@@ -97,34 +99,43 @@ $(function() {
         setUsername(newname);
         socket.emit('new name', newname);
         log(newname + ' (으)로 이름을 바뀌었습니다.');
-        // $inputMessage.val('');
     }
 
-    // Set User name
+    // Set User name, 한번 이름을 바꾸면 다음에도 계속 그 이름을 쓸 수 있도록 쿠키로 저장.
     function setUsername(data) {
         $username.text(data);
         username = data;
         Cookies.set(COOKIE_USERNAME_KEY, data);
     }
+
     // Get User name from cookie.
     function getUsername() {
         return Cookies.get(COOKIE_USERNAME_KEY);
     }
+
     // Sends a chat message
     function sendMessage(message) {
         // var message = $inputMessage.val();
         // // Prevent markup from being injected into the message
         // message = cleanInput(message);
         // if there is a non-empty message and a socket connection
-        if (message && connected) {
-            $inputMessage.val('');
-            addChatMessage({
-                'userid': userid,
-                'username': username,
-                'message': message
-            });
-            // tell server to execute 'new message' and send along one parameter
-            socket.emit('new message', message);
+        if (message) {
+            if (connected) {
+                $inputMessage.val('');
+                addChatMessage({
+                    'userid': userid,
+                    'username': username,
+                    'message': message
+                });
+                // tell server to execute 'new message' and send along one parameter
+                socket.emit('new message', message, function(ack) {
+                    if (!ack.OK) {
+                        log('전송 오류 : ' + ack.message);
+                    }
+                });
+            } else {
+                log('서버와 연결이 끊어진 상태입니다. 새로고침해보십시요.', LOG_URGENT);
+            }
         }
     }
 
@@ -136,7 +147,7 @@ $(function() {
 
     // Adds the visual chat message to the message list
     function addChatMessage(data, options) {
-        console.log('addChatMessage', data, options);
+        // console.log('addChatMessage', data, options);
         // Don't fade the message in if there is an 'X was typing'
         var $typingMessages = getTypingMessages(data);
         options = options || {};
@@ -160,7 +171,7 @@ $(function() {
 
         var $messageBodyDiv = $('<span class="messageBody">')
             .text(data.message);
-        // url to link
+        // url to link (http, mailto)
         $messageBodyDiv.linkify({
             handleLinks: function(links) {
                 links.attr('target', '_blank');
@@ -175,7 +186,7 @@ $(function() {
         // $dateSpan.addClass(dateClass);
 
         var $messageDiv = $('<li class="message"/>')
-            .data('username', data.username)
+            .data('userid', data.userid)
             .addClass(msgClass)
             .addClass(typingClass);
 
@@ -271,22 +282,23 @@ $(function() {
     // Gets the 'X is typing' messages of a user
     function getTypingMessages(data) {
         return $('.typing.message').filter(function(i) {
-            return $(this).data('username') === data.username;
+            return $(this).data('userid') === data.userid;
         });
     }
 
     // Gets the color of a username through our hash function
-    function getUsernameColor(username) {
-        // Compute hash code
-        var hash = 7;
-        for (var i = 0; i < username.length; i++) {
-            hash = username.charCodeAt(i) + (hash << 5) - hash;
-        }
-        // Calculate color
-        var index = Math.abs(hash % COLORS.length);
-        return COLORS[index];
-    }
+    // function getUsernameColor(username) {
+    //     // Compute hash code
+    //     var hash = 7;
+    //     for (var i = 0; i < username.length; i++) {
+    //         hash = username.charCodeAt(i) + (hash << 5) - hash;
+    //     }
+    //     // Calculate color
+    //     var index = Math.abs(hash % COLORS.length);
+    //     return COLORS[index];
+    // }
 
+    // Gets the color of a username through our hash function
     function getUseridColor(userid) {
         // Compute hash code
         var hash = 7;
@@ -301,10 +313,20 @@ $(function() {
     // Get Message Time (hh:mm:ss)
     function getMessageTime() {
         var d = new Date();
-        var t = d.getHours();
-        var m = d.getMinutes();
-        var s = d.getSeconds();
+        var t = padleft(d.getHours());
+        var m = padleft(d.getMinutes());
+        var s = padleft(d.getSeconds());
         return t + ':' + m + ':' + s;
+    }
+
+    // show username popover for user friendlly.
+    function showUsernamePopover(){
+        $username.popover('show');
+        $username.on('shown.bs.popover', function () {
+            setTimeout(function() {
+                $('.popover').fadeOut('slow',function() {});
+            },2000);
+        });
     }
 
     //data-target="#userModal"로 Modal을 띄우면, userInput.focus()가 안먹더라..이유는 아몰랑.
@@ -331,7 +353,7 @@ $(function() {
                 changeName(newname);
             }
         } else {
-            log('연결이 끊어졌습니다. F5를 클릭하여 새로고침해보십시오.');
+            log('서버와 연결이 끊어진 상태입니다. 새로고침해보십시요.', LOG_URGENT);
         }
     });
 
@@ -348,6 +370,7 @@ $(function() {
 
     // When hidden, change focus to inputmessage
     $ciperModal.on('hidden.bs.modal', function() {
+        showUsernamePopover();
         $inputMessage.focus();
     });
 
@@ -459,4 +482,41 @@ $(function() {
     socket.on('stop typing', function(data) {
         removeChatTyping(data);
     });
+
+    // Debugging Listener
+    socket.on('error', function(err) {
+        connected = false;
+        log(err, LOG_URGENT);
+        log('서버로부터 오류 접수. 새로고침해보십시요.', LOG_URGENT);
+    });
+    /*
+        socket.on('connect', function() {
+            console.log('Socket is connected.');
+        });
+
+        socket.on('connect_error', function(err) {
+            console.log('Socket is connect_error, i\'ll connect again.');
+            //start();
+        });
+
+        socket.on('reconnect', function(no) {
+            console.log('Socket reconnected after trying ' + no + 'times');
+        });
+
+        socket.on('reconnect_attempt', function() {
+            console.log('Socket is reconnect_attempt.');
+        });
+
+        socket.on('reconnecting', function(no) {
+            console.log('Socket  is reconnecting ' + no + 'times');
+        });
+
+        socket.on('reconnect_error', function(err) {
+            console.log('Socket is reconnect_error');
+        });
+
+        socket.on('reconnect_failed', function() {
+            log('Socket is reconnect_failed.');
+        });
+    */
 });

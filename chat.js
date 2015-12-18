@@ -1,5 +1,13 @@
 var Server = require('socket.io');
 
+var MSG_OK = {
+    OK: true
+};
+var MSG_NOLOGIN = {
+    OK: false,
+    message: 'not login, please refresh your browser.'
+};
+
 exports.createServer = function(http) {
     var io = new Server(http);
     var nsp = io.of('/chat');
@@ -22,14 +30,17 @@ exports.createServer = function(http) {
         //     if (!socket.auth) socket.emit('err', 'not auth');
         // };
         // when the client emits 'new message', this listens and executes
-        socket.on('new message', function(data) {
-            // socket.chkAuth();
-            // we tell the client to execute 'new message'
-            socket.to(socket.roomname).broadcast.emit('new message', {
-                'userid': socket.id,
-                'username': socket.username,
-                'message': data
-            });
+        socket.on('new message', function(data, cb) {
+            if (socket.auth && socket.roomname) {
+                socket.to(socket.roomname).broadcast.emit('new message', {
+                    'userid': socket.id,
+                    'username': socket.username,
+                    'message': data
+                });
+                cb(MSG_OK);
+            } else {
+                cb(MSG_NOLOGIN);
+            }
         });
 
         // when the client emits 'add user', this listens and executes

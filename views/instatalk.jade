@@ -39,13 +39,13 @@ block content
 					ul.list-inline
 						li
 							//- a#username(href='', data-toggle="modal",data-target="#userModal") Usr1
-							a#username(href='', data-toggle="modal") Usr1
+							a#username(href='', data-toggle="modal", data-placement='left', data-delay='{"show":"500","hide":"100"}', data-content='Click here to change your name.') Usr1
 						//- li
 						//- 	span#status.glyphicon.glyphicon-cloud(style={'color':'rgb(255, 59, 59)'})
 
 			div.input-div
 				div.input-group
-					input#inputMessage.form-control(type='text', placeholder='Type here...')
+					input#inputMessage.form-control(type='text', placeholder='여기에 입력하세요...')
 					span.input-group-btn
 						button#sendButton.btn.btn-default(type='button') Send
 			div.message-out-div
