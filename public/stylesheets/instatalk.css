@@ -6,21 +6,27 @@ html {
     font-weight: 300;
     -webkit-font-smoothing: antialiased;
 }
-html, body {
+
+html,
+body {
     height: 100%;
     background-color: white;
     overflow: hidden;
     margin: 0;
     padding: 0;
 }
-html, input {
+
+html,
+input {
     font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 }
+
 body {
     color: #222;
     /*text-align: center;*/
     /*text-shadow: 0 1px 3px rgba(0, 0, 0, .5);*/
 }
+
 
 /* Extra markup and styles for table-esque vertical and horizontal centering */
 
@@ -29,20 +35,24 @@ body {
     padding: 0px;
 }
 
+
 /* Font */
 
 .messages {
     font-size: 150%;
 }
+
 .inputMessage {
     font-size: 100%;
 }
+
 .log {
     color: gray;
     font-size: 100%;
     margin: 5px;
     text-align: center;
 }
+
 
 /*
  * Page
@@ -61,6 +71,7 @@ body {
     margin-right: auto;
     position: relative;
 }
+
 .top-div {
     z-index: 1001;
     width: 100%;
@@ -70,6 +81,7 @@ body {
     background-color: #D8D8D8;
     padding: 7px;
 }
+
 .input-div {
     z-index: 1001;
     width: 100%;
@@ -77,6 +89,7 @@ body {
     bottom: 0px;
     height: 34px;
 }
+
 .message-out-div {
     height: 100%;
     width: 100%;
@@ -84,11 +97,13 @@ body {
     /*top: 2px;*/
     padding: 36px 0px;
 }
+
 .message-inner-div {
     height: 100%;
     width: 100%;
     overflow: auto;
 }
+
 .messages {
     font-size: 90%;
     height: 100%;
@@ -97,15 +112,19 @@ body {
     list-style: none;
     word-wrap: break-word;
 }
+
 .msg-input {
     width: 100%;
 }
+
 .url-div {
     float: left;
 }
+
 .menu-div {
     float: right;
 }
+
 .url {
     height: 34px;
     font-size: 18px;
@@ -113,43 +132,54 @@ body {
     margin-left: 10px;
     color: #ee5109;
 }
+
 .url:hover {
     color: #ca4204;
     text-decoration: none;
     background-color: transparent;
 }
+
 .modal-dialog {
     width: 300px;
     margin: 10px auto;
 }
+
 #roomname {}
+
 #numUsers {
     margin-left: 5px;
 }
+
 #username {
     font-weight: 900;
     margin-right: 5px;
 }
+
 #startMessage {
     display: none;
 }
+
 .messages {
     height: 100%;
     margin: 0;
     overflow-y: scroll;
     padding: 10px;
 }
+
 .message.typing .messageBody {
     color: gray;
 }
+
 .mymessage {
     text-align: right;
     padding-left: 60px;
 }
+
 .yourmessage {
     text-align: left;
     padding-right: 60px;
 }
+
 .username {
     float: left;
     font-weight: 700;
@@ -157,6 +187,7 @@ body {
     padding-right: 10px;
     text-align: right;
 }
+
 
 /* Input */
 
@@ -172,6 +203,7 @@ body {
     width: 100%;
     background-color: #fcf3cf;
 }
+
 
 /* Chat Bubble */
 
@@ -190,12 +222,14 @@ body {
     vertical-align: top;
     max-width: 65%;
 }
+
 .tail {
     position: absolute;
     height: 18px;
     width: 18px;
     overflow: hidden;
 }
+
 .time {
     font-size: 80%;
     position: absolute;
@@ -203,22 +237,27 @@ body {
     /*width: 18px;*/
     overflow: hidden;
 }
+
 .bubble.left {
     background-color: #FEFEFE;
     text-align: left;
 }
+
 .bubble.left .tail {
     top: 12px;
     left: -18px;
 }
+
 .bubble.left .time {
     bottom: -8px;
     right: -45px;
 }
+
 .bubble.left .tail::before {
     left: 12px;
     transform: skewX(-45deg);
 }
+
 
 /*.bubble.left .time::before {
     left: 12px;
@@ -236,22 +275,28 @@ body {
     height: 12px;
     width: 12px;
 }
+
 .bubble.right {
-    background-color: #BEFFFA;;
+    background-color: #BEFFFA;
+    ;
     text-align: left;
 }
+
 .bubble.right .tail {
     top: 12px;
     right: -18px;
 }
+
 .bubble.right .time {
     bottom: -8px;
     left: -45px;
 }
+
 .bubble.right .tail::before {
     right: 12px;
     transform: skewX(45deg);
 }
+
 
 /*.bubble.right .time::before {
     right: 12px;
@@ -262,6 +307,7 @@ body {
     float: left;
     font-size: 10px;
 }
+
 .rightdate {
     float: right;
     font-size: 10px;

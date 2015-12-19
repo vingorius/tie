@@ -320,12 +320,12 @@ $(function() {
     }
 
     // show username popover for user friendlly.
-    function showUsernamePopover(){
+    function showUsernamePopover() {
         $username.popover('show');
-        $username.on('shown.bs.popover', function () {
+        $username.on('shown.bs.popover', function() {
             setTimeout(function() {
-                $('.popover').fadeOut('slow',function() {});
-            },2000);
+                $('.popover').fadeOut('slow', function() {});
+            }, 2000);
         });
     }
 

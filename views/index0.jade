@@ -9,7 +9,7 @@ block content
 			div.cover-container
 				div.masthead.clearfix
 					div.inner
-						h3.masthead-brand #{__('index.instatalk')}
+						h1.masthead-brand #{__('index.instatalk')}
 						//- nav
 						//- 	ul.nav.masthead-nav
 						//- 		li.active
@@ -20,16 +20,17 @@ block content
 						//- 			a(href='#') Contact
 				div.inner.cover
 					h1.cover-heading #{__('index.cover-heading')}
-					p.lead
-						form#startForm(action='')
-							div.input-group
-								span#server.input-group-addon http://instatalk.me/
-								input#roomname.form-control(type='text', aria-describedby='server', placeholder='room name')
-								span.input-group-btn
-									button#startBtn.btn.btn-default(type='submit') Start
+					p.lead 톡하는데 회원가입/로그인 그런게 왜 필요해!
+					p.lead 서버가 뭔데 우리 대화 내용을 저장해!
+
+					form#startForm(action='')
+						div.input-group
+							span#server.input-group-addon http://instatalk.me/
+							input#roomname.form-control(type='text', aria-describedby='server', placeholder='room name')
+							span.input-group-btn
+								button#startBtn.btn.btn-default(type='submit') Start
 					p.lead
 						| No Login, No Install, Nothing Saved 
-						//- a.btn.btn-lg.btn-default(href='#') Learn more
 				div.mastfoot
 					div.inner
 						p
@@ -39,5 +40,5 @@ block content
 							a(href='https://twitter.com/mdo') @mdo
 							| .
 block append scripts
-	script(src='/javascripts/copytoclipboard.js')
+	//- script(src='/javascripts/copytoclipboard.js')
 	script(src='/javascripts/index.js')
