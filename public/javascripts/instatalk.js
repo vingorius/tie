@@ -27,6 +27,7 @@ $(function() {
     var $roomurl = $('#roomurl'); // URL + roomname
     var $messages = $('#messages'); // Messages area
     var $startMessage = $('#startMessage'); // show when connect to server succesfully.
+    var $startWarning = $('#startWarning'); // show when no ciper.
     var $inputMessage = $('#inputMessage'); // Input message input box
     var $status = $('#status'); // Status
     var $username = $('#username'); // User Name
@@ -127,6 +128,11 @@ $(function() {
                     'username': username,
                     'message': message
                 });
+                // ciper
+                if (ciper) {
+                    var encrypted = CryptoJS.AES.encrypt(message, ciper);
+                    message = encrypted.toString();
+                }
                 // tell server to execute 'new message' and send along one parameter
                 socket.emit('new message', message, function(ack) {
                     if (!ack.OK) {
@@ -388,14 +394,10 @@ $(function() {
     // after enter ciper, program start.
     function start() {
         ciper = cleanInput($ciperInput.val().trim());
-        // If the ciper is valid
-        if (ciper) {
-            // Tell the server your ciper
-            room = window.location.pathname.substring(1);
-            room_url = server + '/' + room;
-            $roomurl.val(room_url);
-            socket.emit('add user', room, getUsername());
-        }
+        room = window.location.pathname.substring(1);
+        room_url = server + '/' + room;
+        $roomurl.val(room_url);
+        socket.emit('add user', room, getUsername());
     }
 
     // Keyboard events
@@ -444,12 +446,32 @@ $(function() {
         setUsername(data.username);
         // Display the welcome message
         $startMessage.show();
+        if (!ciper)
+            $startWarning.show();
+
         addParticipantsMessage(data);
     });
 
     // Whenever the server emits 'new message', update the chat body
     socket.on('new message', function(data) {
-        addChatMessage(data);
+        // ciper
+        if (ciper) {
+            var message;
+            try {
+                var decrypted = CryptoJS.AES.decrypt(data.message, ciper);
+                message = decrypted.toString(CryptoJS.enc.Utf8);
+                if (!message){
+                    log(data.username + '(으)로부터 암호가 맞지 않은 톡을 받았습니다.',LOG_URGENT);
+                }else {
+                    data.message = message;
+                    addChatMessage(data);
+                }
+            } catch (e) {
+                log(data.username + '(으)로부터 받은 메세지 복호화 오류.',LOG_URGENT);
+            }
+        } else {
+            addChatMessage(data);
+        }
     });
 
     // Whenever the server emits 'new name', update user name

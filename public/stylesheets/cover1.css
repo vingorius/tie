@@ -9,33 +9,13 @@
     padding-top: 20px;
     padding-bottom: 50px;
 }
-
-/*.threeno {
+.threeno {
     background-color: #EEE;
     border-radius: 6px;
-}*/
-
-.howtouse .col-lg-4 {
+}
+.howtouse .col-lg-4, .threeno .col-lg-4 {
     margin-bottom: 20px;
     text-align: center;
-}
-.threeno .panel-body {
-    /*height: 200px;*/
-}
-.illustration {
-    box-shadow: 0px 0px 10px #27282C;
-    border: 2px solid #F4F4F4;
-    border-radius: 50%;
-    overflow: hidden;
-    margin: 1em;
-    max-width: 180px;
-    max-height: 180px;
-    flex-shrink: 0;
-}
-.logo-with-text {
-    height: 43px;
-    margin-bottom: 20px;
-    color: #333;
 }
 .room-title {
     padding-top: 30px;

@@ -1,9 +1,9 @@
 $(document).ready(function() {
     // Initialize variables
     var $window = $(window);
-    var $server = $('#server');
     var $roomname = $('#roomname');
     var $startForm = $('#startForm');
+    var $startBtn = $('#startBtn');
 
 
     // Start Form submit
@@ -13,13 +13,13 @@ $(document).ready(function() {
 
         event.preventDefault();
         if (roomname.length > 0) {
-            // CopyToClipboard($server.text() + roomname, true);
+            $startForm.removeClass('has-error');
             this.action = roomname;
             this.submit();
         } else {
-            alert('insert');
+            $startForm.addClass('has-error');
         }
-        event.preventDefault();
+        // event.preventDefault();
     });
 
     // Prevents input from having injected markup

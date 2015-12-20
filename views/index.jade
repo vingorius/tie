@@ -6,67 +6,124 @@ block append stylesheets
 block content
 	div.container
 		div.header.clearfix
-			nav
-				ul.nav.nav-pills.pull-right
-					li.active(role='presentation')
-						a(href='/') Home
-					li(role='presentation')
-						a(href='/') About
-					li(role='presentation')
-						a(href='/') Contact
-			h3.text-muted 복면톡
+			//- nav
+			//- 	ul.nav.nav-pills.pull-right
+			//- 		li.active(role='presentation')
+			//- 			a(href='/') Home
+			//- 		li(role='presentation')
+			//- 			a(href='/') About
+			//- 		li(role='presentation')
+			//- 			a(href='/') Contact
+			h3.text-danger.brand 복면톡 
 		div.jumbotron
 			h1 우리도 자유롭게 톡 해보자~
 			p.lead
-				| 방 이름만 정해서 카톡,라인 등 SNS로 공유하면 끝.
-			p
-				a.btn.btn-lg.btn-success(href='#', role='button') Sign up today
-		div.row.marketing
-			div.col-lg-4
-				img.img-circle(src='data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==', alt='Generic placeholder image', height='140', width='140')
-				h2 회원가입 없다.
-				p 
-					| 톡 하는데 왜 회원 가입을 해야 하는가?
-					| 회원 가입이 없으니 당연히 로그인도 없다.
-				p
-					a.btn.btn-default(href='#', role='button') View details »
-			div.col-lg-4
-				img.img-circle(src='data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==', alt='Generic placeholder image', height='140', width='140')
-				h2 설치할 필요 없다.
-				p
-					| 복잡한 앱은 톡하는 사람 몰래 뭘 하는지 알 수가 없다. 들여다 볼 수가 없다. 
-					| 우리가 원하는 것은 공개, 공유다. 브라우저만 있으면 누구나 톡할 수 있어야 한다. 
-					| 파이어폭스, 크롬, 사파리, IE 모두 지원한다.
-				p
-					a.btn.btn-default(href='#', role='button') View details »
-			div.col-lg-4
-				img.img-circle(src='data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==', alt='Generic placeholder image', height='140', width='140')
-				h2 저장하지 않는다.
-				p
-					| 서버에 저장했다가 어디에 쓸려고? 안다. 나중에라도 볼 수 있게 하려는거...하지만 우리는 이 기능 포기하겠다.
-					| 그러니 나중에라도 봐야하는 거라면 카톡 쓰면 된다.
-				p
-					a.btn.btn-default(href='#', role='button') View details »
-			div.col-lg-4
-				img.img-circle(src='data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==', alt='Generic placeholder image', height='140', width='140')
-				h2 암호화
-				p
-					| 서버에 저장했다가 어디에 쓸려고? 안다. 나중에라도 볼 수 있게 하려는거...하지만 우리는 이 기능 포기하겠다.
-					| 그러니 나중에라도 봐야하는 거라면 카톡 쓰면 된다.
-				p
-					a.btn.btn-default(href='#', role='button') View details »
+				| 미국 NSA가 독일 메르켈 총리까지 도청하는 세상.
+				| 국가와 권력에 의해 개인의 인권이 발가 벗긴 세상.
+			p.lead.room-title.text-success
+				| 방 이름을 정하고, 카톡,라인 등 SNS로 공유하면 끝.
+			div
+				form#startForm.form-group(action='')
+					div.room-group.input-group
+						span.input-group-addon http://masktalk.me/
+						input#roomname.form-control.input-lg(type='text', aria-describedby='server', placeholder='room name')
+						span.input-group-btn
+							button#startBtn.btn.btn-lg.btn-success(type='submit') Create Room
 
-					//- div.col-lg-6
-					//- 	h4 Subheading
-					//- 	p
-					//- 		| Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.
-					//- 	h4 Subheading
-					//- 	p
-					//- 		| Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.
-					//- 	h4 Subheading
-					//- 	p Maecenas sed diam eget risus varius blandit sit amet non magna.
+		hr				
+		div.row.howtouse
+			div.subtitle.text-center
+				h2.text-success 어떻게 쓰냐면...
+			div.col-lg-4
+				div.align-center
+					i.fa.fa-lock.fa-5x.text-success
+					h3.text-bold 1. 미리 암호를 정한다.
+					p 
+						| 만나서 하던, 전화를 하던 미리 암호를 정하자.
+						| 모든 톡 내용을 암호화하여 전송한다.
+						| 혹 실수로 같은 방에 들어와도 암호가 다르면 상대방 톡을 읽을 수 없다.
+			div.col-lg-4
+				div.align-center
+					i.fa.fa-home.fa-5x.text-success
+					h3.text-bold 2. 방을 만든다.
+					p
+						| 방 이름은 어떤 것이던 관계없다. 공백이 있어도 되고, 영어도 된다.
+						| 가급적 다른 사람이 쓸 수 있는 이름이라면 피하자.
+						| 그게 보안에 유리하다.
+			div.col-lg-4
+				div.align-center
+					i.fa.fa-location-arrow.fa-5x.text-success
+					h3.text-bold 3. 링크를 공유한다.
+					p
+						| 암호도 정하고, 방 이름도 정했으면, 위에 있는 'Create Room' 버튼을 누르면 된다.
+						| 제대로 연결되었다면 주소를 복사하라는 안내가 나온다. 따라서 하면 된다.
+
+		hr				
+		div.row.threeno
+			div.subtitle.text-center
+				h2.text-danger 3가지가 없다.
+			div.col-lg-4
+				div.panel.panel-default.text-center
+					div.panel-heading
+						span.fa-stack.fa-4x
+							i.fa.fa-user.fa-stack-1x
+							i.fa.fa-ban.fa-stack-2x.text-danger
+					div.panel-body
+						h3.text-bold 회원 가입 없다.
+						p 
+							| 톡 하는데 왜 회원 가입을 해야 하는가?
+							| 회원 가입이 없으니 당연히 로그인도 없다.
+							| 개인정보 보호하고 싶어도 그런 것 가지고 있지 않다.
+						br
+			div.col-lg-4
+				div.panel.panel-default.text-center
+					div.panel-heading
+						span.fa-stack.fa-4x
+							i.fa.fa-download.fa-stack-1x
+							i.fa.fa-ban.fa-stack-2x.text-danger
+					div.panel-body
+						h3.text-bold 설치 없다.
+						p
+							| 복잡한 앱은 톡하는 사람 몰래 뭘 하는지 알 수가 없다. 들여다 볼 수가 없다. 
+							| 우리가 원하는 것은 공개, 공유다. 브라우저만 있으면 누구나 톡할 수 있어야 한다. 
+							| 파이어폭스, 크롬, 사파리, IE 모두 지원한다.
+			div.col-lg-4
+				div.panel.panel-default.text-center
+					div.panel-heading
+						span.fa-stack.fa-4x
+							i.fa.fa-database.fa-stack-1x
+							i.fa.fa-ban.fa-stack-2x.text-danger
+					div.panel-body
+						h3.text-bold 저장 않는다.
+						p
+							| 서버에 저장했다가 어디에 쓸려고? 안다. 나중에라도 볼 수 있게 하려는거...하지만 우리는 이 기능 포기하겠다.
+							| 그러니 나중에라도 봐야하는 거라면 카톡 쓰면 된다.
+		hr
+		div.row.poweredby
+			div.subtitle.text-center
+				h2.text-muted 도움 받은 곳.
+			div.col-lg-4
+				div.text-center
+					a(href='http://appear.in',target='_blank')
+						img.logo-with-text(src='http://appear.in/i/static/images/logo-with-dark-text.svg', alt='appear.in')
+					p
+						| 방 이름만 공유하여 서비스한다는 개념은 appear.in에서 따왔다.
+			div.col-lg-4
+				div.text-center
+					a(href='http://socket.io',target='_blank')
+						img.logo-with-text(src='http://cdn.socket.io/website/imgs/logo.svg', alt='socket.io')
+					p
+						| Socket.io가 없었다면, 이렇게 빨리 내가 채팅앱을 만들 수 있었을까? Socket.io에 있는 Demo 소스를 수정했다.
+			div.col-lg-4
+				div.text-center
+					a(href='https://github.com',target='_blank')
+						i.fa.fa-github.fa-3x.logo-with-text 
+					p 
+						| 모든 소스는 Github 에 깃들어있다.
+		hr
 		footer.footer
-			p © 2015 Company, Inc.
+			a(href='mailto://vingorius@gmail.com')
+				p © 2015 masktalk.me
 
 
 

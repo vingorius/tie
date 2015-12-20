@@ -25,7 +25,7 @@ block content
 						span(aria-hidden='true') ×
 					h4.modal-title User Name
 				div.modal-body(style={'text-align':'center'})
-					p.lead 대화에 사용할 이름을 입력하세요.
+					p 대화에 사용할 이름을 입력하세요.
 					input#userInput.form-control(type='text')
 				div.modal-footer
 					button#userModalOKButton.btn.btn-default(type='button', data-dismiss='modal') OK
@@ -33,15 +33,8 @@ block content
 	div.container
 		div.page
 			div.top-div
-				div.url-div
-					a.url(href='') instatalk
-				div.menu-div
-					ul.list-inline
-						li
-							//- a#username(href='', data-toggle="modal",data-target="#userModal") Usr1
-							a#username(href='', data-toggle="modal", data-placement='left', data-delay='{"show":"500","hide":"100"}', data-content='Click here to change your name.') Usr1
-						//- li
-						//- 	span#status.glyphicon.glyphicon-cloud(style={'color':'rgb(255, 59, 59)'})
+				div.name-div
+					a#username(href='', data-toggle="modal", data-placement='right', data-delay='{"show":"500","hide":"100"}', data-content='Click here to change your name.') Usr1
 
 			div.input-div
 				div.input-group
@@ -52,7 +45,7 @@ block content
 				div.message-inner-div
 					ul#messages.messages
 						div#startMessage
-							li.log(style='display: list-item;') 성공적으로 서버에 연결되었습니다.
+							li.log(style='display: list-item;') 성공적으로 서버에 연결하였습니다.
 							li.log(style='display: list-item;') 아래 주소를 복사하여 카카오톡,밴드,라인과 같은 채팅앱으로 공유하세요.
 							li.log(style='display: list-item;')
 								//- button#copyButton.btn(data-clipboard-text="http://instatalk.me/hello")
@@ -62,6 +55,8 @@ block content
 									span.input-group-btn
 										button#copyButton.btn.btn-default.btn-sm(type='button',data-clipboard-target='#roomurl',data-toggle="tooltip" data-placement="top",title="Copied") Copy
 
+						div#startWarning
+							li.log(style='display: list-item; color: #A94442;') 암호를 입력하지 않았습니다..
 block append scripts
 	script(src='/bower_components/js-cookie/src/js.cookie.js')
 	script(src='/bower_components/crypto-js/crypto-js.js')
