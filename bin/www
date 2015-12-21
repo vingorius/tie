@@ -8,7 +8,7 @@ var app = require('../app');
 var debug = require('debug')('tie:server');
 var http = require('http');
 // var tie = require('../tie');
-var chat = require('../chat');
+var talkServer = require('../talk_server');
 
 /**
  * Get port from environment and store in Express.
@@ -20,10 +20,12 @@ app.set('port', port);
 /**
  * Create HTTP server.
  */
-
 var server = http.createServer(app);
-// var tie_server = tie.createServer(server);
-var chat_server = chat.createServer(server);
+
+/**
+ * Create Talk server.(piggybag type)
+ */
+var talkServer_server = talkServer.createServer(server);
 
 /**
  * Listen on provided port, on all network interfaces.

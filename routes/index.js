@@ -11,7 +11,7 @@ router.get('/:room', function(req, res, next) {
     console.log('room', req.params.room);
     var room = req.params.room || '';
     // res.render('hush', {
-    res.render('instatalk', {
+    res.render('talk', {
         'room': room
     });
 });

@@ -328,11 +328,9 @@ $(function() {
     // show username popover for user friendlly.
     function showUsernamePopover() {
         $username.popover('show');
-        $username.on('shown.bs.popover', function() {
-            setTimeout(function() {
-                $('.popover').fadeOut('slow', function() {});
-            }, 2000);
-        });
+        setTimeout(function() {
+            $('.popover').fadeOut('slow', function() {});
+        }, 2000);
     }
 
     //data-target="#userModal"로 Modal을 띄우면, userInput.focus()가 안먹더라..이유는 아몰랑.
@@ -423,6 +421,8 @@ $(function() {
         sendMessage(message);
         socket.emit('stop typing');
         typing = false;
+        $inputMessage.focus();
+
     });
 
     // Focus input when clicking anywhere on login page

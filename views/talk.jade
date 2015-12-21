@@ -1,7 +1,7 @@
 extends ./layout/basic
 
 block append stylesheets
-	link(rel='stylesheet', href='/stylesheets/instatalk.css')
+	link(rel='stylesheet', href='/stylesheets/talk.css')
 
 block content
 	div#ciperModal.modal.fade(tabindex='-1', role='dialog')
@@ -38,9 +38,9 @@ block content
 
 			div.input-div
 				div.input-group
-					input#inputMessage.form-control(type='text', placeholder='여기에 입력하세요...')
+					input#inputMessage.form-control.input-lg(type='text', placeholder='여기에 입력하세요...')
 					span.input-group-btn
-						button#sendButton.btn.btn-default(type='button') Send
+						button#sendButton.btn.btn-lg(type='button') Send
 			div.message-out-div
 				div.message-inner-div
 					ul#messages.messages
@@ -48,7 +48,7 @@ block content
 							li.log(style='display: list-item;') 성공적으로 서버에 연결하였습니다.
 							li.log(style='display: list-item;') 아래 주소를 복사하여 카카오톡,밴드,라인과 같은 채팅앱으로 공유하세요.
 							li.log(style='display: list-item;')
-								//- button#copyButton.btn(data-clipboard-text="http://instatalk.me/hello")
+								//- button#copyButton.btn(data-clipboard-text="http://talk.me/hello")
 								//- 	| Copy to clipboard
 								div.input-group
 									input#roomurl.form-control.input-sm(type='text',value='',placeholder='room url')
@@ -66,4 +66,4 @@ block append scripts
 	//- CND 사용은 버전을 정확히 맞춰줘야 한다.
 	//- script(src='/socket.io/socket.io.js')
 	script(src='https://cdn.socket.io/socket.io-1.3.7.js')
-	script(src='/javascripts/instatalk.js')
+	script(src='/javascripts/talk.js')

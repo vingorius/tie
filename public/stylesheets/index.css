@@ -9,12 +9,11 @@
     padding-top: 20px;
     padding-bottom: 50px;
 }
-
-/*.threeno {
-    background-color: #EEE;
-    border-radius: 6px;
-}*/
-
+.roomdiv {
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+}
 .howtouse .col-lg-4 {
     margin-bottom: 20px;
     text-align: center;
@@ -40,15 +39,21 @@
 .room-title {
     padding-top: 30px;
 }
-.room-group {
-    padding-top: 10px;
-    margin-left: auto;
-    margin-right: auto;
-    width: 60%;
-}
 .ico-a {
     color: green;
 }
 .footer {
     text-align: center;
+}
+
+/*mobile*/
+
+@media (max-width: 33em) {
+    .roomdiv {
+        width: 95%;
+    }
+    .roomdiv .input-group-addon, #roomname, #startBtn {
+        padding-left: 4px;
+        padding-right: 4px;
+    }
 }

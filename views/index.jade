@@ -1,7 +1,7 @@
 extends ./layout/basic
 
 block append stylesheets
-	link(rel='stylesheet', href='/stylesheets/cover.css')
+	link(rel='stylesheet', href='/stylesheets/index.css')
 
 block content
 	div.container
@@ -16,19 +16,18 @@ block content
 			//- 			a(href='/') Contact
 			h3.text-danger.brand 복면톡 
 		div.jumbotron
-			h1 우리도 자유롭게 톡 해보자~
+			h1 안전하고 간편한 톡
 			p.lead
-				| 미국 NSA가 독일 메르켈 총리까지 도청하는 세상.
-				| 국가와 권력에 의해 개인의 인권이 발가 벗긴 세상.
-			p.lead.room-title.text-success
-				| 방 이름을 정하고, 카톡,라인 등 SNS로 공유하면 끝.
-			div
+				| 둘 만의 암호를 정하고 방 이름과 공유하면 됩니다.
+			//- p.lead.room-title.text-success
+			//- 	| 방 이름을 정하고, 카톡,라인 등 SNS로 공유하면 끝.
+			div.roomdiv
 				form#startForm.form-group(action='')
-					div.room-group.input-group
+					div.input-group
 						span.input-group-addon http://masktalk.me/
 						input#roomname.form-control.input-lg(type='text', aria-describedby='server', placeholder='room name')
 						span.input-group-btn
-							button#startBtn.btn.btn-lg.btn-success(type='submit') Create Room
+							button#startBtn.btn.btn-lg.btn-success(type='submit') 만들기
 
 		hr				
 		div.row.howtouse
@@ -128,5 +127,4 @@ block content
 
 
 block append scripts
-	//- script(src='/javascripts/copytoclipboard.js')
 	script(src='/javascripts/index.js')
