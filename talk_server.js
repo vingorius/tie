@@ -55,7 +55,7 @@ exports.createServer = function(http) {
 
             var no = numUsers[socket.roomname];
             if (!username) {
-                username = 'Usr' + nameUsers[socket.roomname];
+                username = '아무개' + nameUsers[socket.roomname];
             }
             console.log('add user:%s roomname:%s, %d users', username, roomname, no);
             // we store the username in the socket session for this client

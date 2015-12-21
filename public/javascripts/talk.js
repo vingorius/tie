@@ -6,11 +6,6 @@ $(function() {
         '#43a700', '#287b00', '#59e500', '#00c498',
         '#277dec', '#3824aa', '#68019e', '#880494'
     ];
-    // var COLORS = [
-    //     '#e21400', '#91580f', '#f8a700', '#f78b00',
-    //     '#58dc00', '#287b00', '#a8f07a', '#4ae8c4',
-    //     '#3b88eb', '#3824aa', '#a700ff', '#d300e7'
-    // ];
     var COOKIE_USERNAME_KEY = 'username';
     var LOG_URGENT = {
         'color': '#A94442'
@@ -29,53 +24,33 @@ $(function() {
     var $startMessage = $('#startMessage'); // show when connect to server succesfully.
     var $startWarning = $('#startWarning'); // show when no ciper.
     var $inputMessage = $('#inputMessage'); // Input message input box
-    var $status = $('#status'); // Status
     var $username = $('#username'); // User Name
     var $copyButton = $('#copyButton');
     var $sendButton = $('#sendButton'); // Input Message Send Button
 
     // Prompt for setting a ciper
-    var userid, username, ciper, room_url, room;
+    var userid, username, ciper;
     var connected = false;
     var typing = false;
     var lastTypingTime;
 
     var server = getServer();
-    // var option = {
-    //     forceNew: true,
-    //     reconnection: true,
-    //     reconnectionDelay: 1000,
-    //     reconnectionDelayMax: 5000,
-    //     timeout: 20000,
-    // };
+    var option = {
+        forceNew: true
+    };
 
-    var socket = io(server + '/chat', {
-        'forceNew': true
-    });
+    var socket = io(server + '/chat', option);
 
-    // Init Copy to Clipboard Button
-    // $copyButton.tooltip();
+    // Init 'Copy to Clipboard' Button
     var clipboard = new Clipboard('#copyButton');
 
-    clipboard.on('success', function(e) {
-        $copyButton.tooltip('show');
-        e.clearSelection();
-    });
-
-    // 처음 들어오면 암호를 묻는 모달창을 띄운다.
+    // Show modal to ask 'ciper'.
     $ciperModal.modal('show');
-    //청소
+
+    // clear input
     $inputMessage.val('');
 
-    // String.prototype.startsWith Polyfill
-    // if (!String.prototype.startsWith) {
-    //     String.prototype.startsWith = function(searchString, position) {
-    //         position = position || 0;
-    //         return this.indexOf(searchString, position) === position;
-    //     };
-    // }
-
-    // Padding Left with '0', ex) 1 -> 01
+    // Padding Left with '0', ex) 1 -> 01, to render message time.
     function padleft(no) {
         var str = "" + no;
         var pad = "00";
@@ -91,15 +66,17 @@ $(function() {
         return server;
     }
 
+    // log how many participants are.
     function addParticipantsMessage(data) {
-        log('현재 ' + data.numUsers + '명이 방에 있습니다.');
+        var message = (data.numUsers === 1) ? '현재 혼자 방에 있습니다.' : '현재 ' + data.numUsers + '명이 방에 있습니다.';
+        log(message);
     }
 
     // run Command, change username
     function changeName(newname) {
         setUsername(newname);
         socket.emit('new name', newname);
-        log(newname + ' (으)로 이름을 바뀌었습니다.');
+        log(newname + ' (으)로 이름을 바꾸었습니다.');
     }
 
     // Set User name, 한번 이름을 바꾸면 다음에도 계속 그 이름을 쓸 수 있도록 쿠키로 저장.
@@ -116,9 +93,6 @@ $(function() {
 
     // Sends a chat message
     function sendMessage(message) {
-        // var message = $inputMessage.val();
-        // // Prevent markup from being injected into the message
-        // message = cleanInput(message);
         // if there is a non-empty message and a socket connection
         if (message) {
             if (connected) {
@@ -333,6 +307,12 @@ $(function() {
         }, 2000);
     }
 
+    // clipboard event listener
+    clipboard.on('success', function(e) {
+        $copyButton.tooltip('show');
+        e.clearSelection();
+    });
+
     //data-target="#userModal"로 Modal을 띄우면, userInput.focus()가 안먹더라..이유는 아몰랑.
     $username.click(function() {
         $userModal.modal('show');
@@ -392,9 +372,8 @@ $(function() {
     // after enter ciper, program start.
     function start() {
         ciper = cleanInput($ciperInput.val().trim());
-        room = window.location.pathname.substring(1);
-        room_url = server + '/' + room;
-        $roomurl.val(room_url);
+        var room = window.location.pathname.substring(1);
+        $roomurl.val(server + '/' + room);
         socket.emit('add user', room, getUsername());
     }
 
@@ -460,14 +439,14 @@ $(function() {
             try {
                 var decrypted = CryptoJS.AES.decrypt(data.message, ciper);
                 message = decrypted.toString(CryptoJS.enc.Utf8);
-                if (!message){
-                    log(data.username + '(으)로부터 암호가 맞지 않은 톡을 받았습니다.',LOG_URGENT);
-                }else {
+                if (!message) {
+                    log(data.username + '(으)로부터 암호가 맞지 않은 톡을 받았습니다.', LOG_URGENT);
+                } else {
                     data.message = message;
                     addChatMessage(data);
                 }
             } catch (e) {
-                log(data.username + '(으)로부터 받은 메세지 복호화 오류.',LOG_URGENT);
+                log(data.username + '(으)로부터 받은 메세지 복호화 오류.', LOG_URGENT);
             }
         } else {
             addChatMessage(data);
