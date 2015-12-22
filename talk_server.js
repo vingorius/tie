@@ -114,6 +114,11 @@ exports.createServer = function(http) {
             });
         });
 
+        // when the client emits 'invalid ciper', we broadcast ti to others, but the origin will response.
+        socket.on('invalid ciper', function(data) {
+            socket.to(socket.roomname).broadcast.emit('invalid ciper', data);
+        });
+
         // when the user disconnects.. perform this
         socket.on('disconnect', function() {
             // remove the username from global usernames list

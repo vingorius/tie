@@ -10,7 +10,7 @@ block content
 				div.modal-header
 					button.close(type='button', data-dismiss='modal', aria-label='Close')
 						span(aria-hidden='true') ×
-					h4.modal-title Security
+					h4.modal-title 암호
 				div.modal-body(style={'text-align':'center'})
 					input#ciperInput.form-control(type='text', placeholder='미리 약속한 암호를 입력하세요.')
 				div.modal-footer
@@ -23,7 +23,7 @@ block content
 				div.modal-header
 					button.close(type='button', data-dismiss='modal', aria-label='Close')
 						span(aria-hidden='true') ×
-					h4.modal-title User Name
+					h4.modal-title 대화명
 				div.modal-body(style={'text-align':'center'})
 					p 대화에 사용할 이름을 입력하세요.
 					input#userInput.form-control(type='text')
@@ -34,8 +34,11 @@ block content
 		div.page
 			div.top-div
 				div.name-div
-					a#username(href='', data-toggle="modal", data-placement='right', data-delay='{"show":"500","hide":"100"}', data-content='Click here to change your name.') Usr1
-
+					a#username(href='', data-toggle="modal", data-trigger="hover", data-placement='right', data-delay='{"show":"500","hide":"100"}', data-content='Click here to change your name.') Usr1
+				div.menu-div
+					a#ciper(href='', data-toggle="modal")
+						i.fa.fa-key
+					
 			div.input-div
 				div.input-group
 					input#inputMessage.form-control.input-lg(type='text', placeholder='여기에 입력하세요...')

@@ -25,6 +25,7 @@ $(function() {
     var $startWarning = $('#startWarning'); // show when no ciper.
     var $inputMessage = $('#inputMessage'); // Input message input box
     var $username = $('#username'); // User Name
+    var $ciper = $('#ciper'); // User Name
     var $copyButton = $('#copyButton');
     var $sendButton = $('#sendButton'); // Input Message Send Button
 
@@ -304,10 +305,14 @@ $(function() {
     // show username popover for user friendlly.
     function showUsernamePopover() {
         $username.popover('show');
+    }
+
+    // automcatically fade out...
+    $username.on('shown.bs.popover', function() {
         setTimeout(function() {
             $('.popover').fadeOut('slow', function() {});
         }, 2000);
-    }
+    });
 
     // clipboard event listener
     clipboard.on('success', function(e) {
@@ -318,6 +323,11 @@ $(function() {
     //data-target="#userModal"로 Modal을 띄우면, userInput.focus()가 안먹더라..이유는 아몰랑.
     $username.click(function() {
         $userModal.modal('show');
+    });
+
+    // reset ciper.
+    $ciper.click(function() {
+        location.reload();
     });
 
     // When UserModal show, set userInput default as current username.
@@ -335,7 +345,7 @@ $(function() {
         if (connected) {
             var newname = $userInput.val();
             newname = cleanInput(newname);
-            if (newname && newname.length > 1) {
+            if (newname && newname.length > 0) {
                 changeName(newname);
             }
         } else {
@@ -433,6 +443,8 @@ $(function() {
                 message = decrypted.toString(CryptoJS.enc.Utf8);
                 if (!message) {
                     log(data.username + '(으)로부터 암호가 맞지 않은 톡을 받았습니다.', LOG_URGENT);
+                    data.receipt = username;
+                    socket.emit('invalid ciper',data);
                 } else {
                     data.message = message;
                     addChatMessage(data);
@@ -474,6 +486,12 @@ $(function() {
     // Whenever the server emits 'stop typing', kill the typing message
     socket.on('stop typing', function(data) {
         removeChatTyping(data);
+    });
+
+    socket.on('invalid ciper', function(data) {
+        if(data.userid === userid){
+            log(data.receipt + '님은 암호가 달라 톡을 읽지 못하였습니다.',LOG_URGENT);
+        }
     });
 
     // Debugging Listener
