@@ -52,7 +52,8 @@ body {
     min-width: 320px;
     max-width: 414px;
     width: 100%;
-    min-height: 450px;
+    /*min-height: 450px;*/
+    min-height: 36px;
     max-height: 736px;
     height: 100%;
     border: 1px solid #EEE;

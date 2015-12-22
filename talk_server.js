@@ -1,50 +1,48 @@
 var Server = require('socket.io');
 
 var MSG_OK = {
-    OK: true
+    OK: true,
+    message: 'OK'
 };
 var MSG_NOLOGIN = {
     OK: false,
-    message: 'not login, please refresh your browser.'
+    message: 'no login, please refresh your browser.'
 };
+
+function chkAuth(socket, cb) {
+    if (!socket.auth || !socket.roomname) {
+        return cb(MSG_NOLOGIN);
+    }
+}
 
 exports.createServer = function(http) {
     var io = new Server(http);
     var nsp = io.of('/chat');
 
-    // Chatroom
-
-    // usernames which are currently connected to the chat
-    // var usernames = {};
     var numUsers = {};
     var nameUsers = {};
+
 
     nsp.on('connection', function(socket) {
         // var addedUser = false;
         socket.auth = false;
 
-        // socket.err = function(msg) {
-        //     socket.emit('err', msg);
-        // };
-        // socket.chkAuth = function() {
-        //     if (!socket.auth) socket.emit('err', 'not auth');
-        // };
         // when the client emits 'new message', this listens and executes
         socket.on('new message', function(data, cb) {
-            if (socket.auth && socket.roomname) {
-                socket.to(socket.roomname).broadcast.emit('new message', {
-                    'userid': socket.id,
-                    'username': socket.username,
-                    'message': data
-                });
-                cb(MSG_OK);
-            } else {
-                cb(MSG_NOLOGIN);
+            // Check auth
+            if (!socket.auth || !socket.roomname) {
+                return cb(MSG_NOLOGIN);
             }
+            socket.to(socket.roomname).broadcast.emit('new message', {
+                'userid': socket.id,
+                'username': socket.username,
+                'message': data
+            });
+            cb(MSG_OK);
         });
 
         // when the client emits 'add user', this listens and executes
-        socket.on('add user', function(roomname, username) {
+        socket.on('login', function(roomname, username) {
             socket.auth = true;
 
             socket.roomname = roomname;
@@ -65,7 +63,7 @@ exports.createServer = function(http) {
             // add the client's username to the global list
             // usernames[username] = username;
 
-            socket.emit('login', {
+            socket.emit('login success', {
                 'userid': socket.id,
                 'username': socket.username,
                 'numUsers': no,
@@ -79,19 +77,22 @@ exports.createServer = function(http) {
         });
 
         // when the client emits 'new name', change it's name
-        socket.on('new name', function(newname) {
-            // socket.chkAuth();
+        socket.on('new name', function(newname, cb) {
+            // Check auth
+            if (!socket.auth || !socket.roomname) {
+                return cb(MSG_NOLOGIN);
+            }
+
             data = {
                 'userid': socket.id,
                 'username': socket.username,
-                'message': socket.username + '님 이름이 ' + newname + '(으)로 바뀌었습니다.'
+                'newname': newname,
             };
-            //delete old user
-            // delete usernames[socket.username];
-            //set changed one
-            // usernames[newname] = newname;
+
             socket.username = newname;
             socket.to(socket.roomname).broadcast.emit('new name', data);
+
+            cb(MSG_OK);
         });
 
 

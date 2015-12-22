@@ -75,8 +75,10 @@ $(function() {
     // run Command, change username
     function changeName(newname) {
         setUsername(newname);
-        socket.emit('new name', newname);
-        log(newname + ' (으)로 이름을 바꾸었습니다.');
+        socket.emit('new name', newname, function(ack) {
+            var message = (ack.OK) ? newname + ' (으)로 이름을 바꾸었습니다.' : '전송 오류 : ' + ack.message;
+            log(message);
+        });
     }
 
     // Set User name, 한번 이름을 바꾸면 다음에도 계속 그 이름을 쓸 수 있도록 쿠키로 저장.
@@ -374,15 +376,10 @@ $(function() {
         ciper = cleanInput($ciperInput.val().trim());
         var room = window.location.pathname.substring(1);
         $roomurl.val(server + '/' + room);
-        socket.emit('add user', room, getUsername());
+        socket.emit('login', room, getUsername());
     }
 
     // Keyboard events
-    //
-    // $ciperInput.keydown(function(key){
-    //     if(key.keyCode === 13)
-    //         start();
-    // });
     $inputMessage.keydown(function(key) {
         if (key.keyCode === 13) {
             $sendButton.trigger('click');
@@ -404,11 +401,6 @@ $(function() {
 
     });
 
-    // Focus input when clicking anywhere on login page
-    // $loginPage.click(function() {
-    //     $currentInput.focus();
-    // });
-
     // Focus input when clicking on the message input's border
     $inputMessage.click(function() {
         $inputMessage.focus();
@@ -416,10 +408,10 @@ $(function() {
 
     // Socket events
 
-    // Whenever the server emits 'login', log the login message
+    // Whenever the server emits 'login success', log the login message
     // 1. set userid
     // 2. set username
-    socket.on('login', function(data) {
+    socket.on('login success', function(data) {
         connected = true;
         userid = data.userid;
         setUsername(data.username);
@@ -456,7 +448,7 @@ $(function() {
     // Whenever the server emits 'new name', update user name
     socket.on('new name', function(data) {
         // setUsername(data.username);
-
+        data.message = data.username + '님 이름이 ' + data.newname + '(으)로 바뀌었습니다.';
         removeChatTyping(data);
         log(data.message);
     });
