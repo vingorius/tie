@@ -7,6 +7,11 @@ router.get('/', function(req, res, next) {
     res.render('index');
 });
 
+/* For Search Engine. whitout this, server will create a room named 'robots.txt'.*/
+router.all('/robots.txt',function(req,res,next){
+    res.status(404).send('Not Found');
+});
+
 router.get('/:room', function(req, res, next) {
     console.log('room', req.params.room);
     var room = req.params.room || '';
