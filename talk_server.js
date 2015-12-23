@@ -9,19 +9,12 @@ var MSG_NOLOGIN = {
     message: 'no login, please refresh your browser.'
 };
 
-function chkAuth(socket, cb) {
-    if (!socket.auth || !socket.roomname) {
-        return cb(MSG_NOLOGIN);
-    }
-}
-
 exports.createServer = function(http) {
     var io = new Server(http);
     var nsp = io.of('/chat');
 
     var numUsers = {};
     var nameUsers = {};
-
 
     nsp.on('connection', function(socket) {
         // var addedUser = false;
