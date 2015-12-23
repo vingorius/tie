@@ -17,6 +17,10 @@ block content
 			h3.text-danger.brand 복면톡 
 		div.jumbotron
 			h1 안전하고 간편한 톡
+			span.lead 까페에서 친구랑 얘기할 때....
+			span#frontMessage.typed.lead
+			br
+			br
 			p.lead
 				| 둘 만의 암호를 정하고 방 이름을 공유하세요.
 			//- p.lead.room-title.text-success
@@ -128,4 +132,5 @@ block content
 
 
 block append scripts
+	script(src='/bower_components/typed.js/dist/typed.min.js')
 	script(src='/javascripts/index.js')
