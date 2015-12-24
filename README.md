@@ -1,5 +1,5 @@
 # Masktalk
-No Install, No Save Web Talk Program.
+No Install, No Save, Web Talk Program.
 
 ## Installation
 ~~~

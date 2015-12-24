@@ -7,6 +7,12 @@ router.get('/', function(req, res, next) {
     res.render('index');
 });
 
+/* GET Fb Feedback. */
+router.get('/feedback', function(req, res, next) {
+    // console.log('locale',res.cookie('locale'));
+    res.render('feedback');
+});
+
 /* For Search Engine. whitout this, server will create a room named 'robots.txt'.*/
 router.all('/robots.txt',function(req,res,next){
     res.status(404).send('Not Found');

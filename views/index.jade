@@ -6,19 +6,16 @@ block append stylesheets
 block content
 	div.container
 		div.header.clearfix
-			//- nav
-			//- 	ul.nav.nav-pills.pull-right
-			//- 		li.active(role='presentation')
-			//- 			a(href='/') Home
-			//- 		li(role='presentation')
-			//- 			a(href='/') About
-			//- 		li(role='presentation')
-			//- 			a(href='/') Contact
-			h3.brand
-				a(href='/')
-					img(src='/images/masktalk-brand.png')
-			div.fb-like(data-share='true', data-width='450', data-show-faces='true')
-		div.jumbotron
+			nav.navbar.navbar-default
+				div.container-fluid
+					div.navbar-header
+						a.navbar-brand(href='#')
+							img(alt='Brand', src='/images/masktalk-brand.png')
+					div.collapse.navbar-collapse
+						p.navbar-text.navbar-right
+							a(href='/feedback') Feedback
+
+		div.jumbotron.text-center
 			h1 간편하고 안전한 톡
 			//- span.lead 까페에서 친구랑 얘기할 때....
 			//- span#frontMessage.typed.lead
@@ -35,6 +32,9 @@ block content
 						input#roomname.form-control.input-lg(type='text', aria-describedby='server', placeholder='room name')
 						span.input-group-btn
 							button#startBtn.btn.btn-lg.btn-success(type='submit') 만들기
+				//- div.fb-like(data-share='true', data-width='450', data-show-faces='true')
+				div.fb-like(data-layout='button_count', data-action='like', data-show-faces='true', data-share='true')
+				div.fb-follow(data-layout='button_count', data-show-faces='true')
 		hr
 		div.row.howtouse
 			div.subtitle.text-center
