@@ -17,8 +17,9 @@ block content
 			h3.brand
 				a(href='/')
 					img(src='/images/masktalk-brand.png')
+			div.fb-like(data-share='true', data-width='450', data-show-faces='true')
 		div.jumbotron
-			h1 안전하고 간편한 톡
+			h1 간편하고 안전한 톡
 			//- span.lead 까페에서 친구랑 얘기할 때....
 			//- span#frontMessage.typed.lead
 			//- br
@@ -34,7 +35,6 @@ block content
 						input#roomname.form-control.input-lg(type='text', aria-describedby='server', placeholder='room name')
 						span.input-group-btn
 							button#startBtn.btn.btn-lg.btn-success(type='submit') 만들기
-
 		hr
 		div.row.howtouse
 			div.subtitle.text-center
@@ -62,8 +62,7 @@ block content
 					p
 						| 암호도 정하고, 방 이름도 정했으면, 위에 있는 'Create Room' 버튼을 누르면 된다.
 						| 제대로 연결되었다면 주소를 복사하라는 안내가 나온다. 따라서 하면 된다.
-
-		hr				
+		hr
 		div.row.threeno
 			div.subtitle.text-center
 				h2.text-danger 3가지가 없다.
@@ -122,17 +121,13 @@ block content
 						| Socket.io가 없었다면, 이렇게 빨리 내가 채팅앱을 만들 수 있었을까? Socket.io에 있는 Demo 소스를 수정했다.
 			div.col-lg-4
 				div.text-center
-					a(href='https://github.com/vingorius/tie',target='_blank')
-						i.fa.fa-github.fa-3x.logo-with-text 
+					i.fa.fa-user.fa-3x.logo-with-text 
 					p 
-						| 저장하는지 안 하는지 어떻게 아냐구? 능력자들이 소스를 분석하고 알려주실거다.
+						| 베타테스터가 없었다면 사실 릴리즈할 수도 없었을 것이다.
 		hr
 		footer.footer
 			a(href='mailto://vingorius@gmail.com')
 				p © 2015 masktalk.me
-
-
-
 block append scripts
 	//- script(src='/bower_components/typed.js/dist/typed.min.js')
 	script(src='/javascripts/index.js')
