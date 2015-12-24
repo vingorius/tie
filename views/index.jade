@@ -14,15 +14,17 @@ block content
 			//- 			a(href='/') About
 			//- 		li(role='presentation')
 			//- 			a(href='/') Contact
-			h3.text-danger.brand 복면톡 
+			h3.brand
+				a(href='/')
+					img(src='/images/masktalk-brand.png')
 		div.jumbotron
 			h1 안전하고 간편한 톡
-			span.lead 까페에서 친구랑 얘기할 때....
-			span#frontMessage.typed.lead
-			br
-			br
+			//- span.lead 까페에서 친구랑 얘기할 때....
+			//- span#frontMessage.typed.lead
+			//- br
+			//- br
 			p.lead
-				| 둘 만의 암호를 정하고 방 이름을 공유하세요.
+				| 둘 만의 암호를 정하고, 방 이름을 공유하면 바로 톡할 수 있다.
 			//- p.lead.room-title.text-success
 			//- 	| 방 이름을 정하고, 카톡,라인 등 SNS로 공유하면 끝.
 			div.roomdiv
@@ -33,7 +35,7 @@ block content
 						span.input-group-btn
 							button#startBtn.btn.btn-lg.btn-success(type='submit') 만들기
 
-		hr				
+		hr
 		div.row.howtouse
 			div.subtitle.text-center
 				h2.text-success 어떻게 쓰냐면...
@@ -120,10 +122,10 @@ block content
 						| Socket.io가 없었다면, 이렇게 빨리 내가 채팅앱을 만들 수 있었을까? Socket.io에 있는 Demo 소스를 수정했다.
 			div.col-lg-4
 				div.text-center
-					a(href='https://github.com',target='_blank')
+					a(href='https://github.com/vingorius/tie',target='_blank')
 						i.fa.fa-github.fa-3x.logo-with-text 
 					p 
-						| 모든 소스는 Github 에 깃들어있다.
+						| 저장하는지 안 하는지 어떻게 아냐구? 능력자들이 소스를 분석하고 알려주실거다.
 		hr
 		footer.footer
 			a(href='mailto://vingorius@gmail.com')
